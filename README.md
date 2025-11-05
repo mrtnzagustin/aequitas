@@ -8,7 +8,7 @@ Aequitas is an AI-powered platform designed to provide therapeutic and academic 
 
 ## 🌟 Features
 
-### MVP (v1.0)
+### MVP (v1.0) - Core Features
 - **User & Role Management** - RBAC system for Therapists, Teachers, Parents, and Admins
 - **Holistic Student Profiles** - Unified view of student history, notes, and progress
 - **AI-Powered Task Adaptation** - Automatic task adaptation using LangChain and LangGraph
@@ -16,11 +16,31 @@ Aequitas is an AI-powered platform designed to provide therapeutic and academic 
 - **RAG-based Student History Chat** - Natural language queries on student data
 - **Speech-to-Text Data Entry** - Hands-free note dictation
 
-### Coming Soon (Post-MVP)
-- Proactive Intervention Suggestions
-- Collaborative Goal Setting
-- Advanced Analytics & Reporting
-- Mobile Applications
+### v1.1 - Social-Emotional Learning & Engagement (In Progress)
+- **🎯 Emotional Wellbeing Tracking (SEL)** - Daily mood check-ins, trend analysis, early intervention alerts
+- **🏆 Gamification & Progress Rewards** - Points, badges, streaks, leaderboards to boost engagement
+- **📊 Learning Analytics Dashboard** - Comprehensive metrics and insights for therapists
+- **👨‍👩‍👧 Parent Portal & Communication Hub** - Dedicated parent dashboard with progress tracking
+- **♿ Advanced Accessibility Options** - Dyslexia-friendly fonts, high contrast, screen reader optimization
+
+### v1.2 - Productivity & Collaboration (Planned)
+- **📅 Calendar Integration** - Scheduling sessions with Google Calendar, Outlook sync
+- **🎙️ Voice Notes & Audio Feedback** - Record notes and feedback instead of typing
+- **📝 Interactive Task Templates** - Pre-built templates for common task types
+- **🔗 LMS Integration** - Connect with Google Classroom, Canvas, Moodle
+- **📚 Resource Library** - Curated educational resources and best practices
+
+### v1.3+ - Advanced Features (Roadmap)
+- **🤖 Predictive Analytics & Early Intervention** - AI-powered risk detection
+- **📱 Mobile App with Offline Mode** - Native iOS/Android apps
+- **🌍 Multilingual Expansion** - Portuguese, French, Italian, Catalan support
+- **📈 Peer Benchmarking** - Anonymous performance comparisons
+- **🤝 Real-time Collaboration** - Shared goals and live updates
+- **🎨 Student Self-Assessment Tools** - Reflection journals and goal setting
+- **📋 Automated Progress Reports** - AI-generated comprehensive reports
+- **🔔 Customizable Notification System** - Multi-channel alerts
+- **📊 Attendance & Engagement Tracking** - Automated monitoring
+- **🎥 Multi-format Content Adaptation** - Video and audio support
 
 ## 🏗️ Architecture
 
