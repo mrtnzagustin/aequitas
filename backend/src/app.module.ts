@@ -10,6 +10,7 @@ import { AiModule } from './modules/ai/ai.module';
 import { LearningStyleModule } from './modules/learning-style/learning-style.module';
 import { AvatarModule } from './modules/avatar/avatar.module';
 import { SocialFeedModule } from './modules/social-feed/social-feed.module';
+import { CommunicationHubModule } from './modules/communication/communication-hub.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { SocialFeedModule } from './modules/social-feed/social-feed.module';
     LearningStyleModule,
     AvatarModule,
     SocialFeedModule,
+    CommunicationHubModule,
   ],
 })
 export class AppModule {}
