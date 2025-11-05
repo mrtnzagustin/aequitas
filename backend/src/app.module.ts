@@ -12,6 +12,7 @@ import { AvatarModule } from './modules/avatar/avatar.module';
 import { SocialFeedModule } from './modules/social-feed/social-feed.module';
 import { CommunicationHubModule } from './modules/communication/communication-hub.module';
 import { SoundscapesModule } from './modules/soundscapes/soundscapes.module';
+import { SuccessStoriesModule } from './modules/success-stories/success-stories.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { SoundscapesModule } from './modules/soundscapes/soundscapes.module';
     SocialFeedModule,
     CommunicationHubModule,
     SoundscapesModule,
+    SuccessStoriesModule,
   ],
 })
 export class AppModule {}
