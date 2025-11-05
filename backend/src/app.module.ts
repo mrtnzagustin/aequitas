@@ -7,6 +7,19 @@ import { StudentsModule } from './modules/students/students.module';
 import { NotesModule } from './modules/notes/notes.module';
 import { AdaptationsModule } from './modules/adaptations/adaptations.module';
 import { AiModule } from './modules/ai/ai.module';
+import { LearningStyleModule } from './modules/learning-style/learning-style.module';
+import { AvatarModule } from './modules/avatar/avatar.module';
+import { SocialFeedModule } from './modules/social-feed/social-feed.module';
+import { CommunicationHubModule } from './modules/communication/communication-hub.module';
+import { SoundscapesModule } from './modules/soundscapes/soundscapes.module';
+import { SuccessStoriesModule } from './modules/success-stories/success-stories.module';
+import { MentoringModule } from './modules/mentoring/mentoring.module';
+import { CognitiveLoadModule } from './modules/cognitive-load/cognitive-load.module';
+import { StudyRoomsModule } from './modules/study-rooms/study-rooms.module';
+import { BiometricTrackerModule } from './modules/biometric-tracker/biometric-tracker.module';
+import { LearningPathsModule } from './modules/learning-paths/learning-paths.module';
+import { ContentCreatorModule } from './modules/content-creator/content-creator.module';
+import { StudyCompanionModule } from './modules/study-companion/study-companion.module';
 
 @Module({
   imports: [
@@ -39,6 +52,19 @@ import { AiModule } from './modules/ai/ai.module';
     NotesModule,
     AdaptationsModule,
     AiModule,
+    LearningStyleModule,
+    AvatarModule,
+    SocialFeedModule,
+    CommunicationHubModule,
+    SoundscapesModule,
+    SuccessStoriesModule,
+    MentoringModule,
+    CognitiveLoadModule,
+    StudyRoomsModule,
+    BiometricTrackerModule,
+    LearningPathsModule,
+    ContentCreatorModule,
+    StudyCompanionModule,
   ],
 })
 export class AppModule {}

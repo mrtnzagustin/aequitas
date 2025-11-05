@@ -8,7 +8,7 @@ describe('AdaptationsService', () => {
   let service: AdaptationsService;
   let repository: Repository<TaskAdaptation>;
 
-  const mockAdaptation: TaskAdaptation = {
+  const mockAdaptation: any = {
     id: '123e4567-e89b-12d3-a456-426614174000',
     studentId: 'student-id-123',
     originalTask: 'Read chapter 5 and answer questions 1-10',

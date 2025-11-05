@@ -1,0 +1,158 @@
+/* Accessibility Styles */
+
+:root {
+  --accessibility-font-family: Inter, system-ui, sans-serif;
+  --accessibility-font-size: 100%;
+  --accessibility-line-height: 100%;
+  --accessibility-bg-color: #ffffff;
+  --accessibility-zoom: 1;
+}
+
+/* Apply font family */
+body {
+  font-family: var(--accessibility-font-family);
+  font-size: var(--accessibility-font-size);
+  background-color: var(--accessibility-bg-color);
+}
+
+/* Line height for all text elements */
+p, span, div, li, td, th {
+  line-height: calc(1.5 * var(--accessibility-line-height) / 100);
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  filter: contrast(1.5);
+}
+
+.high-contrast a {
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.high-contrast button {
+  border: 2px solid currentColor;
+}
+
+/* Reduce Animations */
+.reduce-motion,
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Focus Mode */
+.focus-mode nav,
+.focus-mode aside,
+.focus-mode .sidebar,
+.focus-mode .social-feed,
+.focus-mode .notification-badge {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.focus-mode main {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Magnifier */
+.magnifier-enabled {
+  zoom: var(--accessibility-zoom);
+}
+
+/* Reading Ruler */
+.reading-ruler-enabled {
+  position: relative;
+}
+
+.reading-ruler-enabled::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(59, 130, 246, 0.5);
+  pointer-events: none;
+  z-index: 9999;
+  transition: top 0.1s ease-out;
+}
+
+/* OpenDyslexic Font */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+       url('/fonts/OpenDyslexic-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/OpenDyslexic-Bold.woff2') format('woff2'),
+       url('/fonts/OpenDyslexic-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Skip to Main Content Link (Keyboard Navigation) */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 10000;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+/* Focus Indicators */
+*:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Screen Reader Only Class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Dark Mode Accessibility Overrides */
+@media (prefers-color-scheme: dark) {
+  .high-contrast {
+    filter: contrast(1.8) brightness(1.2);
+  }
+}
+
+/* Print Accessibility */
+@media print {
+  .accessibility-toolbar,
+  .skip-to-main {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #000;
+    background: #fff;
+  }
+}

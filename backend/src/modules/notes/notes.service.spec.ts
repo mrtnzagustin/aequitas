@@ -8,7 +8,7 @@ describe('NotesService', () => {
   let service: NotesService;
   let repository: Repository<Note>;
 
-  const mockNote: Note = {
+  const mockNote: any = {
     id: '123e4567-e89b-12d3-a456-426614174000',
     studentId: 'student-id-123',
     authorId: 'therapist-id-123',
