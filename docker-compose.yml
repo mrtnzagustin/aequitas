@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: aequitas-postgres
+    environment:
+      POSTGRES_DB: aequitas_dev
+      POSTGRES_USER: aequitas
+      POSTGRES_PASSWORD: aequitas_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - aequitas-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aequitas"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (for caching and rate limiting)
+  redis:
+    image: redis:7-alpine
+    container_name: aequitas-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - aequitas-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend (NestJS)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: aequitas-backend
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: aequitas
+      DATABASE_PASSWORD: aequitas_dev_password
+      DATABASE_NAME: aequitas_dev
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: dev-jwt-secret-change-in-production
+      JWT_EXPIRES_IN: 30m
+      JWT_REFRESH_SECRET: dev-refresh-secret-change-in-production
+      JWT_REFRESH_EXPIRES_IN: 7d
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aequitas-network
+    command: npm run start:dev
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: aequitas-frontend
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_WS_URL: ws://localhost:3001
+      NEXT_PUBLIC_DEFAULT_LOCALE: es-AR
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    networks:
+      - aequitas-network
+    command: npm run dev
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  aequitas-network:
+    driver: bridge
