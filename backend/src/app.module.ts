@@ -13,6 +13,7 @@ import { SocialFeedModule } from './modules/social-feed/social-feed.module';
 import { CommunicationHubModule } from './modules/communication/communication-hub.module';
 import { SoundscapesModule } from './modules/soundscapes/soundscapes.module';
 import { SuccessStoriesModule } from './modules/success-stories/success-stories.module';
+import { MentoringModule } from './modules/mentoring/mentoring.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { SuccessStoriesModule } from './modules/success-stories/success-stories.
     CommunicationHubModule,
     SoundscapesModule,
     SuccessStoriesModule,
+    MentoringModule,
   ],
 })
 export class AppModule {}
