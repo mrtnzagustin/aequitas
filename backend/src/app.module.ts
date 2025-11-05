@@ -14,6 +14,12 @@ import { CommunicationHubModule } from './modules/communication/communication-hu
 import { SoundscapesModule } from './modules/soundscapes/soundscapes.module';
 import { SuccessStoriesModule } from './modules/success-stories/success-stories.module';
 import { MentoringModule } from './modules/mentoring/mentoring.module';
+import { CognitiveLoadModule } from './modules/cognitive-load/cognitive-load.module';
+import { StudyRoomsModule } from './modules/study-rooms/study-rooms.module';
+import { BiometricTrackerModule } from './modules/biometric-tracker/biometric-tracker.module';
+import { LearningPathsModule } from './modules/learning-paths/learning-paths.module';
+import { ContentCreatorModule } from './modules/content-creator/content-creator.module';
+import { StudyCompanionModule } from './modules/study-companion/study-companion.module';
 
 @Module({
   imports: [
@@ -53,6 +59,12 @@ import { MentoringModule } from './modules/mentoring/mentoring.module';
     SoundscapesModule,
     SuccessStoriesModule,
     MentoringModule,
+    CognitiveLoadModule,
+    StudyRoomsModule,
+    BiometricTrackerModule,
+    LearningPathsModule,
+    ContentCreatorModule,
+    StudyCompanionModule,
   ],
 })
 export class AppModule {}
