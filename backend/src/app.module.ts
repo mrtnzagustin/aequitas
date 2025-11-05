@@ -8,6 +8,7 @@ import { NotesModule } from './modules/notes/notes.module';
 import { AdaptationsModule } from './modules/adaptations/adaptations.module';
 import { AiModule } from './modules/ai/ai.module';
 import { LearningStyleModule } from './modules/learning-style/learning-style.module';
+import { AvatarModule } from './modules/avatar/avatar.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { LearningStyleModule } from './modules/learning-style/learning-style.mod
     AdaptationsModule,
     AiModule,
     LearningStyleModule,
+    AvatarModule,
   ],
 })
 export class AppModule {}
