@@ -7,6 +7,7 @@ import { StudentsModule } from './modules/students/students.module';
 import { NotesModule } from './modules/notes/notes.module';
 import { AdaptationsModule } from './modules/adaptations/adaptations.module';
 import { AiModule } from './modules/ai/ai.module';
+import { LearningStyleModule } from './modules/learning-style/learning-style.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { AiModule } from './modules/ai/ai.module';
     NotesModule,
     AdaptationsModule,
     AiModule,
+    LearningStyleModule,
   ],
 })
 export class AppModule {}
