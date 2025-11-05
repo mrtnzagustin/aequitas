@@ -62,19 +62,33 @@ We build features incrementally, with clear specifications before implementation
 - Tests are written alongside features, not after
 - Documentation is code
 
+### 7. Speckit Workflow Compliance
+All features must follow the complete Speckit workflow before and during implementation.
+
+**Speckit Requirements:**
+- Every feature starts with `spec.md` (problem, solution, acceptance criteria)
+- Before implementation begins, generate `plan.md` using `/speckit.plan`
+- Before coding starts, generate `tasks.md` using `/speckit.tasks`
+- The prerequisite check script enforces this structure - do not bypass it
+- Implement one feature at a time, completing the full cycle (spec → plan → tasks → code → test → document)
+- When implementing multiple features, continue automatically with the next feature after completing the previous one without asking for permission
+
 ## Technical Stack Principles
 
 ### Backend Architecture
 - **Framework:** NestJS for structure, modularity, and TypeScript support
 - **AI Integration:** LangChain for LLM orchestration, LangGraph for stateful AI workflows
-- **Database:** PostgreSQL for relational data, robust ACID compliance
+- **Database:** PostgreSQL with pgvector extension for vector storage and embeddings
+- **Cache & Rate Limiting:** Redis for session management, caching, and API rate limiting
 - **API Design:** RESTful with clear versioning, GraphQL considered for complex queries
+- **Vector Database:** PostgreSQL with pgvector for RAG and semantic search capabilities
 
 ### Frontend Architecture
 - **Framework:** Next.js for SSR, SEO, and performance
 - **UI Library:** Shadcn UI for consistent, accessible components
 - **State Management:** React Context or Zustand for simplicity
 - **i18n:** next-i18next or similar for seamless language switching
+- **Styling:** Tailwind CSS for rapid, consistent styling
 
 ### Code Quality Standards
 - **TypeScript:** Strict mode enabled, no `any` types without justification
@@ -82,6 +96,49 @@ We build features incrementally, with clear specifications before implementation
 - **Code Reviews:** All changes require review, no direct commits to main
 - **Linting:** ESLint + Prettier for consistent formatting
 - **Commit Messages:** Conventional Commits format (feat, fix, docs, etc.)
+
+### Mandatory Testing Requirements
+Every feature implementation MUST include comprehensive testing:
+
+**Unit Testing:**
+- 100% coverage for business logic, services, and utilities
+- All new functions, methods, and components must have unit tests
+- Use Jest for backend (NestJS), Jest + React Testing Library for frontend
+- Mock external dependencies appropriately
+- Test edge cases, error handling, and validation logic
+
+**Integration Testing:**
+- Test API endpoints with Supertest
+- Test database interactions with test database
+- Verify service integrations and module interactions
+- Test authentication and authorization flows
+
+**Regression Testing:**
+- After implementing ANY feature, run the complete test suite for the entire application
+- Ensure no existing functionality is broken
+- Verify test coverage hasn't decreased
+
+**Build & Deployment Verification:**
+- Every implementation must verify: `npm run build` succeeds for both frontend and backend
+- Test `docker-compose up` to ensure all services start correctly
+- Verify health checks pass for all services (postgres, redis, backend, frontend)
+- Ensure no dependency conflicts or missing environment variables
+
+### Documentation Synchronization
+As features are implemented, documentation MUST be updated in parallel:
+
+**Required Updates:**
+- Update `README.md` if new setup steps, environment variables, or dependencies are added
+- Update or create API documentation for new endpoints
+- Update specs (spec.md) with any implementation details that differ from initial plan
+- Update inline code documentation (JSDoc/TSDoc) for all new functions and classes
+- Update architecture diagrams if system design changes
+- Keep i18n files synchronized with new UI strings
+
+**Living Documentation:**
+- Documentation is not a one-time task, it evolves with the code
+- Outdated documentation is worse than no documentation
+- If implementation deviates from spec, update the spec and note why
 
 ## Feature Priority Framework
 
