@@ -11,6 +11,7 @@ import { LearningStyleModule } from './modules/learning-style/learning-style.mod
 import { AvatarModule } from './modules/avatar/avatar.module';
 import { SocialFeedModule } from './modules/social-feed/social-feed.module';
 import { CommunicationHubModule } from './modules/communication/communication-hub.module';
+import { SoundscapesModule } from './modules/soundscapes/soundscapes.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { CommunicationHubModule } from './modules/communication/communication-hu
     AvatarModule,
     SocialFeedModule,
     CommunicationHubModule,
+    SoundscapesModule,
   ],
 })
 export class AppModule {}
