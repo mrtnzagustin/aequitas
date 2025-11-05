@@ -9,7 +9,7 @@ describe('MoodCheckInsService', () => {
   let service: MoodCheckInsService;
   let repository: Repository<MoodCheckIn>;
 
-  const mockMoodCheckIn: MoodCheckIn = {
+  const mockMoodCheckIn: any = {
     id: 'mood-1',
     studentId: 'student-1',
     mood: MoodType.HAPPY,
