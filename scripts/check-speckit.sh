@@ -1,93 +1,139 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Speckit Validation Script
-# Ensures all specs have required plan.md and tasks.md files
+# Speckit Validation Script for Aequitas
+#
+# This script validates that all feature specifications follow the required
+# Speckit workflow structure. It ensures that each spec directory contains
+# the required documentation files before implementation begins.
+#
+# Required structure:
+#   specs/
+#     XXX-feature-name/
+#       spec.md    (Feature specification)
+#       plan.md    (Implementation plan)
+#       tasks.md   (Task breakdown)
+#
+# Usage: bash scripts/check-speckit.sh
 
 set -e
 
-COLOR_RED='\033[0;31m'
-COLOR_GREEN='\033[0;32m'
-COLOR_YELLOW='\033[1;33m'
-COLOR_NC='\033[0m' # No Color
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-SPECS_DIR="specs"
+# Track errors
 ERRORS=0
-WARNINGS=0
 
-echo "🔍 Validating Speckit structure..."
+echo "╔════════════════════════════════════════════════════════════╗"
+echo "║          Aequitas Speckit Structure Validation            ║"
+echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 
+# Check if constitution exists
+CONSTITUTION_PATH=".specify/memory/constitution.md"
+if [[ -f "$CONSTITUTION_PATH" ]] && [[ -s "$CONSTITUTION_PATH" ]]; then
+    echo -e "${GREEN}✓${NC} Constitution exists: $CONSTITUTION_PATH"
+else
+    echo -e "${RED}✗${NC} Constitution missing or empty: $CONSTITUTION_PATH"
+    ERRORS=$((ERRORS + 1))
+fi
+
 # Check if specs directory exists
-if [ ! -d "$SPECS_DIR" ]; then
-    echo -e "${COLOR_RED}❌ Error: specs/ directory not found${COLOR_NC}"
+if [[ ! -d "specs" ]]; then
+    echo -e "${RED}✗${NC} Specs directory not found: specs/"
+    echo ""
+    echo -e "${YELLOW}To create your first spec, run:${NC}"
+    echo "  /speckit-new"
     exit 1
 fi
 
-# Check constitution.md exists
-if [ ! -f ".specify/memory/constitution.md" ]; then
-    echo -e "${COLOR_RED}❌ Error: .specify/memory/constitution.md not found${COLOR_NC}"
-    echo "   Run: mkdir -p .specify && touch .specify/memory/constitution.md"
-    ERRORS=$((ERRORS + 1))
-else
-    echo -e "${COLOR_GREEN}✓${COLOR_NC} Constitution found"
+echo -e "${GREEN}✓${NC} Specs directory exists"
+echo ""
+echo "Checking spec directories..."
+echo ""
+
+# Find all spec directories
+SPEC_DIRS=$(find specs -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort || true)
+
+if [[ -z "$SPEC_DIRS" ]]; then
+    echo -e "${YELLOW}⚠${NC}  No spec directories found in specs/"
+    echo ""
+    echo -e "${YELLOW}To create your first spec, run:${NC}"
+    echo "  /speckit-new"
+    exit 0
 fi
 
-echo ""
-echo "Checking individual specs..."
-echo ""
-
 # Check each spec directory
-for spec_dir in "$SPECS_DIR"/*/; do
-    if [ ! -d "$spec_dir" ]; then
-        continue
-    fi
+SPEC_COUNT=0
+for SPEC_DIR in $SPEC_DIRS; do
+    SPEC_NAME=$(basename "$SPEC_DIR")
+    SPEC_COUNT=$((SPEC_COUNT + 1))
 
-    spec_name=$(basename "$spec_dir")
-    has_error=false
+    # Initialize status for this spec
+    SPEC_ERRORS=0
 
-    # Check for spec.md
-    if [ ! -f "$spec_dir/spec.md" ]; then
-        echo -e "${COLOR_RED}❌ ${spec_name}: Missing spec.md${COLOR_NC}"
+    echo "📁 $SPEC_NAME"
+
+    # Check for required files
+    SPEC_FILE="$SPEC_DIR/spec.md"
+    PLAN_FILE="$SPEC_DIR/plan.md"
+    TASKS_FILE="$SPEC_DIR/tasks.md"
+
+    # Check spec.md
+    if [[ -f "$SPEC_FILE" ]]; then
+        echo -e "  ${GREEN}✓${NC} spec.md"
+    else
+        echo -e "  ${RED}✗${NC} spec.md (MISSING)"
+        SPEC_ERRORS=$((SPEC_ERRORS + 1))
         ERRORS=$((ERRORS + 1))
-        has_error=true
     fi
 
-    # Check for plan.md
-    if [ ! -f "$spec_dir/plan.md" ]; then
-        echo -e "${COLOR_RED}❌ ${spec_name}: Missing plan.md${COLOR_NC}"
-        echo "   Generate with: /speckit.plan or manually create the file"
+    # Check plan.md
+    if [[ -f "$PLAN_FILE" ]]; then
+        echo -e "  ${GREEN}✓${NC} plan.md"
+    else
+        echo -e "  ${RED}✗${NC} plan.md (MISSING)"
+        SPEC_ERRORS=$((SPEC_ERRORS + 1))
         ERRORS=$((ERRORS + 1))
-        has_error=true
     fi
 
-    # Check for tasks.md
-    if [ ! -f "$spec_dir/tasks.md" ]; then
-        echo -e "${COLOR_RED}❌ ${spec_name}: Missing tasks.md${COLOR_NC}"
-        echo "   Generate with: /speckit.tasks or manually create the file"
+    # Check tasks.md
+    if [[ -f "$TASKS_FILE" ]]; then
+        echo -e "  ${GREEN}✓${NC} tasks.md"
+    else
+        echo -e "  ${RED}✗${NC} tasks.md (MISSING)"
+        SPEC_ERRORS=$((SPEC_ERRORS + 1))
         ERRORS=$((ERRORS + 1))
-        has_error=true
     fi
 
-    # If all files present, show success
-    if [ "$has_error" = false ]; then
-        echo -e "${COLOR_GREEN}✓${COLOR_NC} ${spec_name}"
-    fi
+    echo ""
 done
 
+# Summary
+echo "════════════════════════════════════════════════════════════"
 echo ""
-echo "─────────────────────────────────────"
 
-if [ $ERRORS -eq 0 ]; then
-    echo -e "${COLOR_GREEN}✓ All Speckit validations passed!${COLOR_NC}"
+if [[ $ERRORS -eq 0 ]]; then
+    echo -e "${GREEN}✓ All specs are valid!${NC}"
+    echo -e "Total specs validated: $SPEC_COUNT"
+    echo ""
     exit 0
 else
-    echo -e "${COLOR_RED}❌ Found ${ERRORS} error(s)${COLOR_NC}"
+    echo -e "${RED}✗ ERROR: Some specs are missing required files.${NC}"
     echo ""
-    echo "Speckit Workflow Requirements:"
-    echo "  1. Each spec must have: spec.md, plan.md, and tasks.md"
-    echo "  2. Generate plan.md before implementation"
-    echo "  3. Generate tasks.md before coding"
+    echo -e "${YELLOW}Required workflow:${NC}"
+    echo "  📝 spec.md → 📐 plan.md → ✅ tasks.md → 💻 Implementation"
     echo ""
-    echo "See .specify/memory/constitution.md for complete guidelines"
+    echo -e "${YELLOW}Each spec must have: spec.md, plan.md, and tasks.md${NC}"
+    echo ""
+    echo -e "${YELLOW}To fix missing files:${NC}"
+    echo "  1. cd into the spec directory"
+    echo "  2. Run /speckit-plan to generate plan.md"
+    echo "  3. Run /speckit-tasks to generate tasks.md"
+    echo ""
+    echo "See .specify/memory/constitution.md for complete workflow."
+    echo ""
     exit 1
 fi
