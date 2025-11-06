@@ -24,13 +24,13 @@ export class RemindersController {
 
   @Post('rules')
   @ApiOperation({ summary: 'Create a reminder rule' })
-  async createRule(@Request() req, @Body() createDto: CreateReminderRuleDto) {
+  async createRule(@Request() req: any, @Body() createDto: CreateReminderRuleDto) {
     return this.remindersService.createRule(req.user.userId, createDto);
   }
 
   @Get('rules')
   @ApiOperation({ summary: 'Get user reminder rules' })
-  async getUserRules(@Request() req) {
+  async getUserRules(@Request() req: any) {
     return this.remindersService.getUserRules(req.user.userId);
   }
 
@@ -67,13 +67,13 @@ export class RemindersController {
 
   @Get('history')
   @ApiOperation({ summary: 'Get reminder history' })
-  async getHistory(@Request() req, @Query('limit') limit?: number) {
+  async getHistory(@Request() req: any, @Query('limit') limit?: number) {
     return this.remindersService.getReminderHistory(req.user.userId, limit);
   }
 
   @Get('suggestions')
   @ApiOperation({ summary: 'Get suggested reminder settings' })
-  async getSuggestions(@Request() req) {
+  async getSuggestions(@Request() req: any) {
     return this.remindersService.getSuggestedSettings(req.user.userId);
   }
 }

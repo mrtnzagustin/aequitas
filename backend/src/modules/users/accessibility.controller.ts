@@ -27,7 +27,7 @@ export class AccessibilityController {
     status: 200,
     description: 'Accessibility profile retrieved successfully',
   })
-  async getMyProfile(@Request() req): Promise<AccessibilityProfile> {
+  async getMyProfile(@Request() req: any): Promise<AccessibilityProfile> {
     return this.accessibilityService.getProfile(req.user.userId);
   }
 
@@ -48,7 +48,7 @@ export class AccessibilityController {
     description: 'Accessibility profile updated successfully',
   })
   async updateMyProfile(
-    @Request() req,
+    @Request() req: any,
     @Body() updateDto: UpdateAccessibilityProfileDto,
   ): Promise<AccessibilityProfile> {
     return this.accessibilityService.updateProfile(req.user.userId, updateDto);
@@ -60,7 +60,7 @@ export class AccessibilityController {
     status: 200,
     description: 'Accessibility profile reset successfully',
   })
-  async resetProfile(@Request() req): Promise<AccessibilityProfile> {
+  async resetProfile(@Request() req: any): Promise<AccessibilityProfile> {
     return this.accessibilityService.resetProfile(req.user.userId);
   }
 

@@ -7,7 +7,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { LearningStyleService } from './learning-style.service';
+import { LearningStyleService, StyleRecommendation } from './learning-style.service';
 import { RecordEvidenceDto } from './dto/record-evidence.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -36,7 +36,7 @@ export class LearningStyleController {
 
   @Get('recommendations/:studentId')
   @Roles(UserRole.THERAPIST, UserRole.ADMIN, UserRole.STUDENT)
-  getRecommendations(@Param('studentId') studentId: string) {
+  getRecommendations(@Param('studentId') studentId: string): Promise<StyleRecommendation> {
     return this.learningStyleService.getRecommendations(studentId);
   }
 

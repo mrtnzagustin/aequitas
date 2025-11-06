@@ -15,6 +15,7 @@ export enum UserRole {
   THERAPIST = 'THERAPIST',
   TEACHER = 'TEACHER',
   PARENT = 'PARENT',
+  STUDENT = 'STUDENT',
 }
 
 export enum UserStatus {

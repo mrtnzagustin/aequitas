@@ -23,7 +23,7 @@ export class TaskBreakdownService {
     const breakdown = this.breakdownRepository.create({
       originalTaskId,
       studentId,
-      totalEstimatedMinutes: microTasks.reduce((sum, t) => sum + t.estimatedMinutes, 0),
+      totalEstimatedMinutes: microTasks.reduce((sum, t) => sum + (t.estimatedMinutes || 0), 0),
       difficultyScore: this.calculateDifficulty(microTasks),
       aiRationale: 'Task broken down into manageable steps based on complexity',
     });
