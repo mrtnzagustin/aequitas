@@ -4,11 +4,36 @@
 [![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/typescript-%5E5.0.0-blue.svg)](https://www.typescriptlang.org/)
 
-Aequitas is an AI-powered platform designed to provide therapeutic and academic support for students with specific learning conditions (dyslexia, ADHD, disabilities). The platform assists psycho-pedagogues, teachers, parents, and schools by facilitating the adaptation of academic tasks and maintaining holistic student profiles.
+> Empowering inclusive education through AI
+
+**Aequitas** is an AI-powered platform designed to democratize access to quality educational adaptations for students with specific learning conditions (dyslexia, ADHD, disabilities). The platform assists psycho-pedagogues, teachers, parents, and schools by facilitating the adaptation of academic tasks and maintaining holistic student profiles.
+
+---
+
+## 📑 Table of Contents
+
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Prerequisites](#-prerequisites)
+- [Quick Start](#-quick-start)
+- [Project Structure](#-project-structure)
+- [Testing](#-testing)
+- [Development Workflow](#-development-workflow)
+- [Internationalization](#-internationalization)
+- [Security](#-security)
+- [Documentation](#-documentation)
+- [Contributing](#-contributing)
+- [Roadmap](#-roadmap)
+- [README Maintenance Rules](#-readme-maintenance-rules)
+- [License](#-license)
+- [Support](#-support)
+
+---
 
 ## 🌟 Features
 
-### MVP (v1.0) - Core Features
+### MVP (v1.0) - Core Features ✅
+
 - **User & Role Management** - RBAC system for Therapists, Teachers, Parents, and Admins
 - **Holistic Student Profiles** - Unified view of student history, notes, and progress
 - **AI-Powered Task Adaptation** - Automatic task adaptation using LangChain and LangGraph
@@ -16,83 +41,90 @@ Aequitas is an AI-powered platform designed to provide therapeutic and academic 
 - **RAG-based Student History Chat** - Natural language queries on student data
 - **Speech-to-Text Data Entry** - Hands-free note dictation
 
-### v1.1 - Social-Emotional Learning & Engagement (In Progress)
-- **🎯 Emotional Wellbeing Tracking (SEL)** - Daily mood check-ins, trend analysis, early intervention alerts ✅
-- **🏆 Gamification & Progress Rewards** - Points, badges, streaks, leaderboards to boost engagement ✅
-- **📊 Learning Analytics Dashboard** - Comprehensive metrics and insights for therapists
-- **👨‍👩‍👧 Parent Portal & Communication Hub** - Dedicated parent dashboard with progress tracking
-- **♿ Advanced Accessibility Toolbar** - Dyslexia-friendly fonts, high contrast, text-to-speech, magnifier, focus mode ✅
+### v1.1 - Social-Emotional Learning & Engagement ✅
 
-### v1.2 - AI-Powered Learning Support & Collaboration (In Progress)
-- **🤖 AI-Powered Study Companion** - 24/7 chatbot for homework help, concept explanations, emotional support
-- **🎨 Multi-Sensory Content Creator** - Auto-generate audio, visual, and interactive content versions
-- **🎯 Adaptive Learning Paths** - AI-driven personalized learning journeys with dynamic difficulty
-- **🔍 Smart Task Breakdown** - AI breaks complex assignments into manageable micro-tasks
-- **💬 Parent-Teacher Communication Hub** - Centralized messaging, shared observations, progress reports
-- **⏰ Time Management Coach** - AI-powered scheduling, time estimation, and planning assistance
-- **🎵 Study Soundscapes** - Adaptive focus sounds, binaural beats, and calming music
-- **🔔 Smart Reminder System** - Intelligent reminders that learn optimal timing for each student
-- **📊 Progress Visualization Dashboard** - Interactive charts showing growth and skill development
-- **🎯 Focus Mode & Distraction Blocker** - Eliminate distractions for deep work sessions
-- **📝 AI Quiz & Flashcard Generator** - Auto-create practice materials with spaced repetition
-- **📅 Calendar Integration** - Scheduling sessions with Google Calendar, Outlook sync (planned)
-- **🎙️ Voice Notes & Audio Feedback** - Record notes and feedback instead of typing (planned)
-- **🔗 LMS Integration** - Connect with Google Classroom, Canvas, Moodle (planned)
-- **📚 Resource Library** - Curated educational resources and best practices (planned)
+- **Emotional Wellbeing Tracking (SEL)** - Daily mood check-ins, trend analysis, early intervention alerts
+- **Gamification & Progress Rewards** - Points, badges, streaks, leaderboards to boost engagement
+- **Advanced Accessibility Toolbar** - Dyslexia-friendly fonts, high contrast, text-to-speech, magnifier, focus mode
 
-### v1.3+ - Advanced Features (Roadmap)
-- **🤖 Predictive Analytics & Early Intervention** - AI-powered risk detection
-- **📱 Mobile App with Offline Mode** - Native iOS/Android apps
-- **🌍 Multilingual Expansion** - Portuguese, French, Italian, Catalan support
-- **📈 Peer Benchmarking** - Anonymous performance comparisons
-- **🤝 Real-time Collaboration** - Shared goals and live updates
-- **🎨 Student Self-Assessment Tools** - Reflection journals and goal setting
-- **📋 Automated Progress Reports** - AI-generated comprehensive reports
-- **🔔 Customizable Notification System** - Multi-channel alerts
-- **📊 Attendance & Engagement Tracking** - Automated monitoring
-- **🎥 Multi-format Content Adaptation** - Video and audio support
+### v1.2 - AI-Powered Learning Support & Collaboration 🚧
+
+- AI-Powered Study Companion
+- Multi-Sensory Content Creator
+- Adaptive Learning Paths
+- Smart Task Breakdown
+- Parent-Teacher Communication Hub
+- Time Management Coach
+- Study Soundscapes
+- Smart Reminder System
+- Progress Visualization Dashboard
+- Focus Mode & Distraction Blocker
+- AI Quiz & Flashcard Generator
+
+### v1.3+ - Advanced Features (Roadmap) 🗺️
+
+See the [Roadmap](#-roadmap) section for detailed planning and timelines.
+
+---
 
 ## 🏗️ Architecture
 
 ### Technology Stack
 
-#### Backend
-- **Framework:** NestJS (TypeScript)
-- **AI Integration:** LangChain, LangGraph
-- **Database:** PostgreSQL with pgvector extension
-- **ORM:** TypeORM
-- **Authentication:** JWT with bcrypt
-- **API Documentation:** Swagger/OpenAPI
+<table>
+<tr>
+<td valign="top" width="50%">
 
-#### Frontend
-- **Framework:** Next.js 14 (App Router)
-- **UI Library:** Shadcn UI + Tailwind CSS
-- **State Management:** React Context / Zustand
-- **Internationalization:** next-intl
-- **Forms:** React Hook Form + Zod validation
+**Backend**
+- Framework: NestJS (TypeScript)
+- AI Integration: LangChain, LangGraph
+- Database: PostgreSQL + pgvector
+- ORM: TypeORM
+- Authentication: JWT + bcrypt
+- API Docs: Swagger/OpenAPI
 
-#### Infrastructure
-- **Development:** Docker Compose
-- **Production:** Kubernetes (planned)
-- **Storage:** AWS S3 (or compatible)
-- **Monitoring:** Prometheus + Grafana (planned)
+</td>
+<td valign="top" width="50%">
+
+**Frontend**
+- Framework: Next.js 14 (App Router)
+- UI Library: Shadcn UI + Tailwind CSS
+- State: React Context / Zustand
+- i18n: next-intl
+- Forms: React Hook Form + Zod
+
+</td>
+</tr>
+</table>
+
+**Infrastructure**
+- Development: Docker Compose
+- Production: Kubernetes (planned)
+- Storage: AWS S3 (or compatible)
+- Monitoring: Prometheus + Grafana (planned)
+
+---
 
 ## 📋 Prerequisites
 
-- Node.js >= 18.0.0
-- pnpm >= 8.0.0 (recommended) or npm
-- Docker & Docker Compose
-- PostgreSQL 15+ (or use Docker)
+- **Node.js** >= 18.0.0
+- **pnpm** >= 8.0.0 (recommended) or npm
+- **Docker** & Docker Compose
+- **PostgreSQL** 15+ (or use Docker)
+
+---
 
 ## 🚀 Quick Start
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/mrtnzagustin/aequitas.git
 cd aequitas
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 # Install root dependencies (includes Husky for git hooks)
 npm install
@@ -181,6 +213,7 @@ pnpm run dev
 ```
 
 ### 5. Run Database Migrations
+
 ```bash
 cd backend
 pnpm run migration:run
@@ -188,6 +221,7 @@ pnpm run seed  # Optional: Load sample data
 ```
 
 ### 6. Access the Application
+
 - **Frontend:** http://localhost:3000
 - **Backend API:** http://localhost:3001
 - **API Documentation:** http://localhost:3001/api/docs
@@ -196,68 +230,53 @@ pnpm run seed  # Optional: Load sample data
 - Email: `admin@aequitas.local`
 - Password: `Admin123!`
 
+---
+
 ## 📁 Project Structure
 
 ```
 aequitas/
 ├── .github/
 │   └── prompts/              # Speckit AI prompts
-│       ├── speckit.analyze.prompt.md
-│       ├── speckit.clarify.prompt.md
-│       ├── speckit.specify.prompt.md
-│       └── ...
 ├── .specify/
-│   └── constitution.md       # Project constitution
+│   ├── memory/
+│   │   └── constitution.md   # Project constitution
+│   ├── AI_AGENT_INSTRUCTIONS.md
+│   └── README.md
 ├── specs/                    # Feature specifications
 │   ├── 001-user-role-management/
-│   ├── 002-holistic-student-profile/
-│   ├── 003-ai-task-adaptation/
+│   │   ├── spec.md
+│   │   ├── plan.md
+│   │   └── tasks.md
 │   └── ...
 ├── backend/                  # NestJS Backend
 │   ├── src/
 │   │   ├── modules/
-│   │   │   ├── auth/
-│   │   │   ├── users/
-│   │   │   ├── students/
-│   │   │   ├── notes/
-│   │   │   ├── adaptations/
-│   │   │   └── ai/
 │   │   ├── common/
 │   │   ├── config/
-│   │   ├── database/
 │   │   └── main.ts
-│   ├── test/
-│   ├── package.json
-│   └── tsconfig.json
+│   └── test/
 ├── frontend/                 # Next.js Frontend
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── [locale]/
-│   │   │   └── api/
 │   │   ├── components/
-│   │   │   ├── ui/          # Shadcn components
-│   │   │   ├── auth/
-│   │   │   ├── students/
-│   │   │   └── adaptations/
 │   │   ├── hooks/
-│   │   ├── lib/
 │   │   └── i18n/
-│   │       └── locales/
-│   │           ├── es/
-│   │           └── en/
-│   ├── public/
-│   ├── package.json
-│   └── next.config.js
+│   └── public/
 ├── scripts/
 │   └── check-speckit.sh      # Speckit validation script
+├── .husky/                   # Git hooks
 ├── docker-compose.yml
-├── .gitignore
+├── CLAUDE.md                 # AI agent instructions
 └── README.md
 ```
+
+---
 
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
 cd backend
 
@@ -272,6 +291,7 @@ pnpm run test:cov
 ```
 
 ### Frontend Tests
+
 ```bash
 cd frontend
 
@@ -285,16 +305,19 @@ pnpm run test:e2e
 pnpm run test:e2e:ui
 ```
 
-## 📚 Documentation
+### Testing Requirements
 
-- **API Documentation:** Available at `/api/docs` when running the backend
-- **Feature Specifications:** See `specs/` directory
-- **Architecture Decisions:** See `.specify/memory/constitution.md`
-- **Prompt Engineering:** See `.github/prompts/`
+Every feature implementation **MUST include**:
+- ✅ **Unit tests** (>90% coverage)
+- ✅ **Integration tests** (API endpoints, DB interactions)
+- ✅ **Regression tests** (complete test suite)
+- ✅ **Build verification** (`npm run build` succeeds)
+
+---
 
 ## 🛠️ Development Workflow
 
-### 1. Spec-Driven Development with Speckit
+### Spec-Driven Development with Speckit
 
 This project follows the **Speckit methodology** with **automatic enforcement**:
 
@@ -303,43 +326,37 @@ This project follows the **Speckit methodology** with **automatic enforcement**:
 ```
 
 #### Required Files for Each Feature
-Every feature in `specs/[number]-[feature-name]/` **must have**:
+
+Every feature in `specs/[number]-[feature-name]/` **MUST have**:
 - ✅ `spec.md` - Feature specification with requirements and acceptance criteria
 - ✅ `plan.md` - Implementation plan with phases, timeline, and dependencies
 - ✅ `tasks.md` - Detailed task breakdown with time estimates
 
 #### Automatic Enforcement
 
-**🔒 Husky Pre-Commit Hook**: Blocks commits if specs are missing required files or tests fail
+**🔒 Husky Pre-Commit Hook** - Blocks commits if:
+- Speckit files are missing for feature branches
+- Tests fail
+- No changes are staged
+
 ```bash
 # Located at: .husky/pre-commit
-# Automatically runs before every commit:
-#   ✓ Validates Speckit structure (for feature branches)
-#   ✓ Runs backend tests (if backend/src changes)
-#   ✓ Runs frontend tests (if frontend/src changes)
-#   ✓ Blocks commit if any check fails
+# ⚠️ Never use: git commit --no-verify
+# Fix the underlying issue instead!
 ```
 
-**⚠️ Important**: Never use `git commit --no-verify` to bypass the hooks. If the pre-commit check fails, fix the underlying issue instead.
-
-**🔍 Validation Script**: Run manually or in CI/CD
+**🔍 Manual Validation**
 ```bash
 bash scripts/check-speckit.sh
 ```
 
-**🤖 GitHub Actions**: Validates and tests on every PR and push
-```yaml
-# See: .github/workflows/speckit-enforcement.yml
-# Runs:
-#   - Speckit structure validation
-#   - Backend tests and build
-#   - Frontend tests and build
-#   - Constitution validation
-```
+**🤖 GitHub Actions** - Runs on every PR/push
+- Speckit structure validation
+- Backend and frontend tests
+- Build verification
 
 #### Claude Code Commands
 
-Use these slash commands when working with Claude Code:
 ```bash
 /speckit-new       # Start a new feature with guided spec creation
 /speckit-plan      # Generate implementation plan from spec.md
@@ -349,48 +366,30 @@ Use these slash commands when working with Claude Code:
 
 #### Workflow Example
 
-1. **Create a new feature**:
-   ```bash
-   /speckit-new
-   # Or manually: mkdir specs/048-feature-name
-   ```
-
+1. **Create feature**: `mkdir specs/048-feature-name` or `/speckit-new`
 2. **Write spec.md** with requirements and acceptance criteria
+3. **Generate plan.md**: `/speckit-plan`
+4. **Generate tasks.md**: `/speckit-tasks`
+5. **Implement** following tasks
+6. **Test comprehensively** (unit, integration, regression, build)
+7. **Update documentation** (README, API docs, i18n files)
+8. **Commit** (pre-commit hook validates everything)
 
-3. **Generate plan.md**:
-   ```bash
-   /speckit-plan
-   ```
+**📖 Full Speckit Guide**: [.specify/README.md](.specify/README.md)
+**📜 Project Constitution**: [.specify/memory/constitution.md](.specify/memory/constitution.md)
+**🤖 AI Agent Instructions**: [CLAUDE.md](CLAUDE.md)
 
-4. **Generate tasks.md**:
-   ```bash
-   /speckit-tasks
-   ```
+### Branching Strategy
 
-5. **Implement following tasks** - Check off tasks as you complete them
-
-6. **Test comprehensively**:
-   - Unit tests (>90% coverage)
-   - Integration tests
-   - Regression tests
-   - Build verification (`npm run build`)
-   - Docker verification (`docker-compose up`)
-
-7. **Update documentation** - README, API docs, i18n files
-
-**📖 Full Speckit Guide**: See [.specify/README.md](.specify/README.md)
-
-**📜 Project Constitution**: See [.specify/memory/constitution.md](.specify/memory/constitution.md)
-
-**🤖 AI Agent Instructions**: See [CLAUDE.md](CLAUDE.md) for guidelines on working with Claude Code and other AI agents
-
-### 2. Branching Strategy
 - `main` - Production-ready code
 - `develop` - Integration branch
-- `feature/[spec-number]-[short-description]` - Feature branches
-- `fix/[issue-number]-[short-description]` - Bug fixes
+- `NNN-feature-name` - Feature branches (must match `specs/NNN-*/`)
+- `fix/issue-description` - Bug fixes
+- `chore/description` - Maintenance tasks
+- `hotfix/description` - Urgent production fixes
 
-### 3. Commit Convention
+### Commit Convention
+
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
@@ -398,25 +397,34 @@ feat(spec-003): implement AI task adaptation
 fix(auth): resolve JWT token refresh issue
 docs(readme): update installation instructions
 test(students): add unit tests for StudentService
+chore(deps): update dependencies
 ```
+
+---
 
 ## 🌍 Internationalization
 
 The platform is built with i18n from the ground up:
 
 - **Default Language:** Spanish (es-AR)
-- **Supported Languages:** Spanish, English (more coming soon)
+- **Supported Languages:** Spanish (es), English (en)
 - **AI Responses:** Automatically respond in user's selected language
 - **Date/Time Formatting:** Locale-aware
+- **All UI strings** must be in locale files (no hardcoded strings)
 
-To add a new language:
+### Adding a New Language
+
 1. Create `frontend/src/i18n/locales/[locale]/` directory
 2. Translate all JSON files
 3. Update `frontend/src/i18n/config.ts`
+4. Update this README's supported languages list
+
+---
 
 ## 🔒 Security
 
 ### Best Practices Implemented
+
 - ✅ Role-Based Access Control (RBAC)
 - ✅ JWT authentication with refresh tokens
 - ✅ Password hashing with bcrypt (cost factor 12)
@@ -428,25 +436,240 @@ To add a new language:
 - ✅ Audit logging for all sensitive operations
 
 ### Compliance
+
 - **Argentina Personal Data Protection Act** (Ley 25.326)
 - **GDPR-ready** (data export, deletion, consent tracking)
 - **WCAG 2.1 AA** accessibility compliance
 
+---
+
+## 📚 Documentation
+
+- **API Documentation:** Available at `/api/docs` when running the backend
+- **Feature Specifications:** See `specs/` directory
+- **Project Constitution:** [.specify/memory/constitution.md](.specify/memory/constitution.md)
+- **AI Agent Instructions:** [CLAUDE.md](CLAUDE.md)
+- **Speckit Workflow Guide:** [.specify/README.md](.specify/README.md)
+- **Prompt Engineering:** [.github/prompts/](.github/prompts/)
+
+---
+
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+We welcome contributions! Please follow these guidelines:
 
 ### Development Guidelines
-1. All features must have a spec in `specs/` before implementation
-2. Follow the code style (ESLint + Prettier)
-3. Write tests for new features
+
+1. **All features must have a spec** in `specs/` before implementation
+2. **Follow the code style** (ESLint + Prettier)
+3. **Write tests** for new features (>90% coverage)
+4. **Update documentation** (README, API docs, inline comments)
+5. **Ensure accessibility** (WCAG 2.1 AA)
+6. **All UI strings in locale files** (no hardcoded strings)
+7. **Never bypass pre-commit hooks** (`--no-verify`)
+
+### Pull Request Process
+
+1. Create a feature branch: `NNN-feature-name`
+2. Follow the Speckit workflow (spec → plan → tasks → code)
+3. Write comprehensive tests
 4. Update documentation
-5. Ensure accessibility (WCAG 2.1 AA)
-6. All UI strings must be in locale files (no hardcoded strings)
+5. Ensure all tests pass and build succeeds
+6. Submit PR with clear description
+7. Address review comments
+
+For more details, see [CONTRIBUTING.md](CONTRIBUTING.md) (if available).
+
+---
+
+## 🗺️ Roadmap
+
+### Q1 2026
+
+- ✅ MVP Release (v1.0) - Core features
+- ✅ Emotional Wellbeing Tracking (SEL)
+- ✅ Gamification & Progress Rewards
+- ✅ Advanced Accessibility Toolbar
+- [ ] User onboarding improvements
+- [ ] Mobile-responsive design enhancements
+
+### Q2 2026
+
+- [ ] Learning Analytics Dashboard
+- [ ] Parent Portal & Communication Hub
+- [ ] AI-Powered Study Companion
+- [ ] Multi-Sensory Content Creator
+- [ ] Adaptive Learning Paths
+- [ ] Proactive Intervention Suggestions
+- [ ] Collaborative Goal Setting
+
+### Q3 2026
+
+- [ ] Mobile Applications (iOS/Android)
+- [ ] Offline Mode
+- [ ] Multi-language expansion (Portuguese, French, Italian, Catalan)
+- [ ] Real-time Collaboration Features
+- [ ] Advanced Analytics Dashboard
+
+### Q4 2026
+
+- [ ] Predictive Analytics & Early Intervention
+- [ ] AI Model Fine-tuning
+- [ ] Third-party Integrations (Google Classroom, Canvas, Moodle)
+- [ ] Enterprise Features
+- [ ] Automated Progress Reports
+- [ ] Peer Benchmarking
+
+---
+
+## 📋 README Maintenance Rules
+
+This README is a **living document** that evolves with the project. To keep it accurate and useful, follow these maintenance rules:
+
+### When to Update This README
+
+**You MUST update this README when:**
+
+1. **Adding new features or versions**
+   - Update the [Features](#-features) section with the new feature
+   - Add version markers (✅ implemented, 🚧 in progress, 🗺️ planned)
+   - Update the [Roadmap](#-roadmap) section accordingly
+
+2. **Changing the technology stack**
+   - Update the [Architecture](#-architecture) section
+   - Update badges at the top if versions change
+   - Document why the change was made in the commit message
+
+3. **Adding new environment variables**
+   - Update the environment configuration examples in [Quick Start](#-quick-start)
+   - Document what each new variable does
+   - Mark required vs optional variables
+
+4. **Adding new scripts or commands**
+   - Update relevant sections (Testing, Development Workflow, etc.)
+   - Include usage examples
+   - Document what each command does
+
+5. **Changing setup/installation steps**
+   - Update [Prerequisites](#-prerequisites)
+   - Update [Quick Start](#-quick-start)
+   - Test the instructions on a clean environment
+
+6. **Adding new dependencies or prerequisites**
+   - Update [Prerequisites](#-prerequisites)
+   - Update installation instructions if needed
+   - Document any system requirements
+
+7. **Changing the project structure**
+   - Update [Project Structure](#-project-structure)
+   - Keep the tree diagram accurate
+   - Add comments for important directories
+
+8. **Adding new documentation**
+   - Update [Documentation](#-documentation) section
+   - Add links to new docs
+   - Keep the documentation organized
+
+9. **Changing security practices or compliance**
+   - Update [Security](#-security) section
+   - Document new compliance requirements
+   - Update best practices list
+
+10. **Adding new languages (i18n)**
+    - Update [Internationalization](#-internationalization)
+    - Update supported languages list
+    - Document how to add new languages
+
+11. **Updating the roadmap**
+    - Mark completed features with ✅
+    - Move items between quarters as needed
+    - Add new planned features
+    - Remove deprecated/cancelled features
+
+### How to Update This README
+
+**Follow these guidelines:**
+
+1. **Keep it organized**
+   - Respect the existing structure and hierarchy
+   - Don't create new top-level sections without good reason
+   - Use the Table of Contents structure as a guide
+
+2. **Be concise but complete**
+   - Feature descriptions should be 1-2 lines maximum
+   - Use bullet points for lists
+   - Link to detailed docs instead of copying content
+
+3. **Maintain consistency**
+   - Use the same formatting style throughout
+   - Keep emoji usage consistent with existing patterns
+   - Follow the same heading hierarchy (H1 → H2 → H3)
+
+4. **Test examples**
+   - Verify all code examples work
+   - Test all commands on a clean environment
+   - Ensure links are not broken
+
+5. **Update the Table of Contents**
+   - Add new sections to the TOC
+   - Keep TOC links working
+   - Keep TOC order matching document order
+
+6. **Use semantic versioning for features**
+   - v1.0 = MVP (core features)
+   - v1.1, v1.2 = Minor enhancements
+   - v2.0 = Major architectural changes
+
+7. **Document breaking changes prominently**
+   - Add a "⚠️ Breaking Change" notice
+   - Explain migration steps
+   - Link to detailed migration guide if needed
+
+### Prohibited Actions
+
+**You MUST NEVER:**
+
+- ❌ Remove sections without documenting why
+- ❌ Add marketing fluff or exaggerations
+- ❌ Copy-paste large blocks of code (link to files instead)
+- ❌ Use overly technical jargon without explanation
+- ❌ Include outdated information
+- ❌ Break existing links without fixing them
+- ❌ Change the structure drastically without team consensus
+
+### Review Checklist
+
+Before committing README changes, verify:
+
+- [ ] All links work (internal and external)
+- [ ] All code examples are tested and work
+- [ ] All commands execute successfully
+- [ ] Version numbers are accurate
+- [ ] No spelling or grammar errors
+- [ ] Table of Contents is updated
+- [ ] Formatting is consistent
+- [ ] No broken markdown syntax
+- [ ] Mobile-friendly (no super-wide tables)
+
+### Commit Message Format
+
+When updating the README, use these commit message prefixes:
+
+```bash
+docs(readme): add new feature to features section
+docs(readme): update installation instructions
+docs(readme): fix broken links in documentation section
+docs(readme): reorganize architecture section
+docs(readme): update roadmap for Q2 2026
+```
+
+---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 🙏 Acknowledgments
 
@@ -456,33 +679,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Shadcn UI](https://ui.shadcn.com/) - Component library
 - [Spec-Kit](https://github.com/github/spec-kit) - Spec-driven development methodology
 
+---
+
 ## 📞 Support
 
 - **Issues:** [GitHub Issues](https://github.com/mrtnzagustin/aequitas/issues)
 - **Discussions:** [GitHub Discussions](https://github.com/mrtnzagustin/aequitas/discussions)
 - **Email:** support@aequitas.app
-
-## 🗺️ Roadmap
-
-### Q1 2026
-- ✅ MVP Release (v1.0)
-- [ ] User onboarding improvements
-- [ ] Mobile-responsive design enhancements
-
-### Q2 2026
-- [ ] Proactive Intervention Suggestions
-- [ ] Collaborative Goal Setting
-- [ ] Advanced Analytics Dashboard
-
-### Q3 2026
-- [ ] Mobile Applications (iOS/Android)
-- [ ] Offline Mode
-- [ ] Multi-language expansion
-
-### Q4 2026
-- [ ] AI Model Fine-tuning
-- [ ] Third-party Integrations (Google Classroom, etc.)
-- [ ] Enterprise Features
 
 ---
 
