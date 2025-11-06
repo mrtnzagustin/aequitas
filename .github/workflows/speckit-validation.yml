@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for git diff
 
       - name: Run Speckit validation
         run: |
@@ -28,10 +30,20 @@ jobs:
       - name: Check for implementation without plan/tasks
         run: |
           # Get list of changed files
+          CHANGED_FILES=""
+
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+            # For PRs, compare against the base branch
+            git fetch origin ${{ github.event.pull_request.base.ref }}
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
           else
-            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+            # For pushes, compare against the previous commit
+            if [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+              CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.sha }})
+            else
+              # First push to branch, check all files
+              CHANGED_FILES=$(git ls-files)
+            fi
           fi
 
           echo "Changed files:"
@@ -42,6 +54,10 @@ jobs:
           VALIDATION_FAILED=0
 
           for spec_dir in specs/*/; do
+            if [ ! -d "$spec_dir" ]; then
+              continue
+            fi
+
             spec_name=$(basename "$spec_dir")
             spec_num=$(echo "$spec_name" | cut -d'-' -f1)
 
@@ -79,6 +95,8 @@ jobs:
             echo "See: .specify/constitution.md for complete guidelines"
             exit 1
           fi
+
+          echo "✅ No implementation files found without corresponding spec files"
 
       - name: Report success
         if: success()
