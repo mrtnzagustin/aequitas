@@ -1,0 +1,119 @@
+name: Speckit Validation
+
+on:
+  pull_request:
+    paths:
+      - 'specs/**'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'specs/**'
+
+jobs:
+  validate-speckit:
+    name: Validate Speckit Structure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Speckit validation
+        run: |
+          chmod +x scripts/check-speckit.sh
+          bash scripts/check-speckit.sh
+
+      - name: Check for implementation without plan/tasks
+        run: |
+          # Get list of changed files
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+          else
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          fi
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          echo ""
+
+          # Check if implementation files exist for specs without plan/tasks
+          VALIDATION_FAILED=0
+
+          for spec_dir in specs/*/; do
+            spec_name=$(basename "$spec_dir")
+            spec_num=$(echo "$spec_name" | cut -d'-' -f1)
+
+            # Check if backend or frontend files for this spec are being changed
+            if echo "$CHANGED_FILES" | grep -qE "(backend|frontend).*${spec_num}"; then
+              echo "Found implementation changes for ${spec_name}"
+
+              # Verify plan.md and tasks.md exist
+              if [ ! -f "${spec_dir}/plan.md" ]; then
+                echo "❌ ERROR: ${spec_name} is missing plan.md"
+                VALIDATION_FAILED=1
+              fi
+
+              if [ ! -f "${spec_dir}/tasks.md" ]; then
+                echo "❌ ERROR: ${spec_name} is missing tasks.md"
+                VALIDATION_FAILED=1
+              fi
+            fi
+          done
+
+          if [ $VALIDATION_FAILED -eq 1 ]; then
+            echo ""
+            echo "╔════════════════════════════════════════════════════════╗"
+            echo "║  Speckit Validation Failed                            ║"
+            echo "╚════════════════════════════════════════════════════════╝"
+            echo ""
+            echo "You are implementing features without completing the Speckit workflow."
+            echo ""
+            echo "Required workflow:"
+            echo "  1. Create spec.md (requirements)"
+            echo "  2. Generate plan.md (implementation strategy)"
+            echo "  3. Generate tasks.md (detailed tasks)"
+            echo "  4. THEN implement the feature"
+            echo ""
+            echo "See: .specify/constitution.md for complete guidelines"
+            exit 1
+          fi
+
+      - name: Report success
+        if: success()
+        run: |
+          echo "✅ All Speckit validations passed!"
+          echo ""
+          echo "All specs have required files and follow the workflow."
+
+  check-constitution:
+    name: Validate Constitution Exists
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check constitution.md
+        run: |
+          if [ ! -f ".specify/constitution.md" ]; then
+            echo "❌ ERROR: .specify/constitution.md not found"
+            echo ""
+            echo "The Speckit constitution is required and defines:"
+            echo "  - Project principles and guidelines"
+            echo "  - Technical stack and standards"
+            echo "  - Mandatory testing requirements"
+            echo "  - Documentation synchronization rules"
+            exit 1
+          fi
+
+          echo "✅ Constitution found and valid"
+
+          # Check that constitution is not empty
+          if [ ! -s ".specify/constitution.md" ]; then
+            echo "❌ ERROR: constitution.md is empty"
+            exit 1
+          fi
+
+          echo "✅ Constitution has content"
