@@ -1,18 +1,26 @@
 name: Speckit Validation
 
+# This workflow enforces the Speckit specification-driven development workflow
+# for the Aequitas platform. It ensures that all features follow the required
+# structure: spec.md → plan.md → tasks.md → Implementation
+
 on:
   pull_request:
     paths:
       - 'specs/**'
+      - 'backend/**'
+      - 'frontend/**'
   push:
     branches:
       - main
       - develop
     paths:
       - 'specs/**'
+      - 'backend/**'
+      - 'frontend/**'
 
 jobs:
-  validate-speckit:
+  validate-speckit-structure:
     name: Validate Speckit Structure
     runs-on: ubuntu-latest
 
@@ -20,118 +28,267 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch full history for git diff
+          fetch-depth: 0  # Full history for git comparisons
 
-      - name: Run Speckit validation
-        run: |
-          chmod +x scripts/check-speckit.sh
-          bash scripts/check-speckit.sh
+      - name: Run Speckit validation script
+        run: bash scripts/check-speckit.sh
 
       - name: Check for implementation without plan/tasks
         run: |
-          # Get list of changed files
-          CHANGED_FILES=""
+          echo "Checking if implementation changes have corresponding spec documentation..."
 
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            # For PRs, compare against the base branch
-            git fetch origin ${{ github.event.pull_request.base.ref }}
-            CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          # Determine base branch for comparison
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_REF="${{ github.event.pull_request.base.sha }}"
           else
-            # For pushes, compare against the previous commit
-            if [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
-              CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.sha }})
-            else
-              # First push to branch, check all files
-              CHANGED_FILES=$(git ls-files)
-            fi
+            BASE_REF="HEAD~1"
           fi
 
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
+          echo "Comparing against: $BASE_REF"
+
+          # Get list of changed files
+          CHANGED_FILES=$(git diff --name-only $BASE_REF HEAD)
+
+          # Check if there are changes in backend/ or frontend/
+          IMPL_CHANGES=$(echo "$CHANGED_FILES" | grep -E '^(backend|frontend)/' || true)
+
+          if [[ -z "$IMPL_CHANGES" ]]; then
+            echo "✓ No implementation changes detected"
+            exit 0
+          fi
+
+          echo "Implementation changes detected:"
+          echo "$IMPL_CHANGES"
           echo ""
 
-          # Check if implementation files exist for specs without plan/tasks
-          VALIDATION_FAILED=0
+          # Check if there are corresponding changes in specs/
+          SPEC_CHANGES=$(echo "$CHANGED_FILES" | grep -E '^specs/.*/(plan|tasks)\.md$' || true)
 
-          for spec_dir in specs/*/; do
-            if [ ! -d "$spec_dir" ]; then
-              continue
-            fi
-
-            spec_name=$(basename "$spec_dir")
-            spec_num=$(echo "$spec_name" | cut -d'-' -f1)
-
-            # Check if backend or frontend files for this spec are being changed
-            if echo "$CHANGED_FILES" | grep -qE "(backend|frontend).*${spec_num}"; then
-              echo "Found implementation changes for ${spec_name}"
-
-              # Verify plan.md and tasks.md exist
-              if [ ! -f "${spec_dir}/plan.md" ]; then
-                echo "❌ ERROR: ${spec_name} is missing plan.md"
-                VALIDATION_FAILED=1
-              fi
-
-              if [ ! -f "${spec_dir}/tasks.md" ]; then
-                echo "❌ ERROR: ${spec_name} is missing tasks.md"
-                VALIDATION_FAILED=1
-              fi
-            fi
-          done
-
-          if [ $VALIDATION_FAILED -eq 1 ]; then
+          if [[ -z "$SPEC_CHANGES" ]]; then
+            echo "❌ ERROR: Implementation changes detected without corresponding spec documentation"
             echo ""
-            echo "╔════════════════════════════════════════════════════════╗"
-            echo "║  Speckit Validation Failed                            ║"
-            echo "╚════════════════════════════════════════════════════════╝"
+            echo "Changed implementation files:"
+            echo "$IMPL_CHANGES"
             echo ""
-            echo "You are implementing features without completing the Speckit workflow."
+            echo "Required workflow: spec → plan → tasks → implementation"
             echo ""
-            echo "Required workflow:"
-            echo "  1. Create spec.md (requirements)"
-            echo "  2. Generate plan.md (implementation strategy)"
-            echo "  3. Generate tasks.md (detailed tasks)"
-            echo "  4. THEN implement the feature"
+            echo "Before implementing, ensure:"
+            echo "  1. spec.md exists and is complete"
+            echo "  2. plan.md exists (run /speckit-plan)"
+            echo "  3. tasks.md exists (run /speckit-tasks)"
             echo ""
-            echo "See: .specify/memory/constitution.md for complete guidelines"
+            echo "See .specify/memory/constitution.md for details."
             exit 1
           fi
 
-          echo "✅ No implementation files found without corresponding spec files"
-
-      - name: Report success
-        if: success()
-        run: |
-          echo "✅ All Speckit validations passed!"
+          echo "✓ Spec documentation changes found:"
+          echo "$SPEC_CHANGES"
           echo ""
-          echo "All specs have required files and follow the workflow."
+          echo "✓ Implementation follows Speckit workflow"
 
-  check-constitution:
-    name: Validate Constitution Exists
+  validate-constitution-exists:
+    name: Validate Constitution
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check constitution.md
+      - name: Check constitution file exists
         run: |
-          if [ ! -f ".specify/memory/constitution.md" ]; then
-            echo "❌ ERROR: .specify/memory/constitution.md not found"
+          CONSTITUTION_PATH=".specify/memory/constitution.md"
+
+          if [[ ! -f "$CONSTITUTION_PATH" ]]; then
+            echo "❌ ERROR: Constitution file not found: $CONSTITUTION_PATH"
+            exit 1
+          fi
+
+          echo "✓ Constitution file exists: $CONSTITUTION_PATH"
+
+      - name: Check constitution is not empty
+        run: |
+          CONSTITUTION_PATH=".specify/memory/constitution.md"
+
+          if [[ ! -s "$CONSTITUTION_PATH" ]]; then
+            echo "❌ ERROR: Constitution file is empty: $CONSTITUTION_PATH"
+            exit 1
+          fi
+
+          FILE_SIZE=$(wc -l < "$CONSTITUTION_PATH")
+          echo "✓ Constitution file has $FILE_SIZE lines"
+
+      - name: Validate constitution content
+        run: |
+          CONSTITUTION_PATH=".specify/memory/constitution.md"
+
+          # Check for key sections that must exist
+          REQUIRED_SECTIONS=(
+            "Core Principles"
+            "Technology Stack"
+            "Testing"
+            "Documentation"
+            "Quality Gates"
+          )
+
+          MISSING_SECTIONS=()
+
+          for SECTION in "${REQUIRED_SECTIONS[@]}"; do
+            if ! grep -qi "$SECTION" "$CONSTITUTION_PATH"; then
+              MISSING_SECTIONS+=("$SECTION")
+            fi
+          done
+
+          if [[ ${#MISSING_SECTIONS[@]} -gt 0 ]]; then
+            echo "⚠ WARNING: Constitution may be incomplete. Missing sections:"
+            for SECTION in "${MISSING_SECTIONS[@]}"; do
+              echo "  - $SECTION"
+            done
             echo ""
-            echo "The Speckit constitution is required and defines:"
-            echo "  - Project principles and guidelines"
-            echo "  - Technical stack and standards"
-            echo "  - Mandatory testing requirements"
-            echo "  - Documentation synchronization rules"
+            echo "Constitution should define:"
+            echo "  - Core development principles"
+            echo "  - Technology stack requirements"
+            echo "  - Testing standards and coverage thresholds"
+            echo "  - Documentation requirements"
+            echo "  - Quality gates and validation rules"
+          else
+            echo "✓ Constitution contains all required sections"
+          fi
+
+  validate-tech-stack-compliance:
+    name: Validate Tech Stack Compliance
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for forbidden dependencies
+        run: |
+          echo "Checking for forbidden or unapproved dependencies..."
+
+          # Define forbidden patterns (packages not in the approved tech stack)
+          FORBIDDEN_BACKEND=(
+            "express" # Using NestJS, not raw Express
+            "mongoose" # Using TypeORM with PostgreSQL, not MongoDB
+            "sequelize" # Using TypeORM
+            "mysql" # Using PostgreSQL
+            "mocha" # Using Jest
+            "chai" # Using Jest
+          )
+
+          FORBIDDEN_FRONTEND=(
+            "vue" # Using React
+            "angular" # Using React
+            "svelte" # Using React
+            "styled-components" # Using Tailwind CSS
+            "emotion" # Using Tailwind CSS
+            "redux" # Using Zustand
+            "mobx" # Using Zustand
+            "enzyme" # Using React Testing Library
+          )
+
+          ERRORS=0
+
+          # Check backend package.json
+          if [[ -f "backend/package.json" ]]; then
+            for PKG in "${FORBIDDEN_BACKEND[@]}"; do
+              if grep -q "\"$PKG\"" backend/package.json; then
+                echo "❌ ERROR: Forbidden backend dependency found: $PKG"
+                echo "   See .specify/memory/constitution.md for approved tech stack"
+                ERRORS=$((ERRORS + 1))
+              fi
+            done
+          fi
+
+          # Check frontend package.json
+          if [[ -f "frontend/package.json" ]]; then
+            for PKG in "${FORBIDDEN_FRONTEND[@]}"; do
+              if grep -q "\"$PKG\"" frontend/package.json; then
+                echo "❌ ERROR: Forbidden frontend dependency found: $PKG"
+                echo "   See .specify/memory/constitution.md for approved tech stack"
+                ERRORS=$((ERRORS + 1))
+              fi
+            done
+          fi
+
+          if [[ $ERRORS -gt 0 ]]; then
+            echo ""
+            echo "Tech stack violations detected!"
+            echo "All dependencies must be approved in the constitution."
             exit 1
           fi
 
-          echo "✅ Constitution found and valid"
+          echo "✓ No forbidden dependencies detected"
 
-          # Check that constitution is not empty
-          if [ ! -s ".specify/memory/constitution.md" ]; then
-            echo "❌ ERROR: constitution.md is empty"
-            exit 1
+  validate-test-files-exist:
+    name: Validate Test Files Exist
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check implementation files have tests
+        run: |
+          echo "Checking that new implementation files have corresponding tests..."
+
+          BASE_REF="${{ github.event.pull_request.base.sha }}"
+
+          # Get new/modified implementation files
+          NEW_BACKEND_FILES=$(git diff --name-only --diff-filter=A $BASE_REF HEAD | grep -E '^backend/src/.+\.(ts|js)$' | grep -v '\.spec\.' | grep -v '\.test\.' || true)
+          NEW_FRONTEND_FILES=$(git diff --name-only --diff-filter=A $BASE_REF HEAD | grep -E '^frontend/src/.+\.(tsx?|jsx?)$' | grep -v '\.spec\.' | grep -v '\.test\.' || true)
+
+          MISSING_TESTS=()
+
+          # Check backend files
+          for FILE in $NEW_BACKEND_FILES; do
+            # Skip DTOs, entities, and config files (don't require tests)
+            if [[ "$FILE" =~ \.(dto|entity|config)\.ts$ ]]; then
+              continue
+            fi
+
+            # Check for corresponding .spec.ts file
+            SPEC_FILE="${FILE%.ts}.spec.ts"
+            if [[ ! -f "$SPEC_FILE" ]] && ! git diff --name-only $BASE_REF HEAD | grep -q "$SPEC_FILE"; then
+              MISSING_TESTS+=("$FILE")
+            fi
+          done
+
+          # Check frontend files
+          for FILE in $NEW_FRONTEND_FILES; do
+            # Skip index files and types
+            if [[ "$FILE" =~ (index|types)\.(tsx?|jsx?)$ ]]; then
+              continue
+            fi
+
+            # Check for corresponding test file
+            BASE="${FILE%.*}"
+            EXT="${FILE##*.}"
+            TEST_FILE="${BASE}.test.${EXT}"
+
+            if [[ ! -f "$TEST_FILE" ]] && ! git diff --name-only $BASE_REF HEAD | grep -q "$TEST_FILE"; then
+              MISSING_TESTS+=("$FILE")
+            fi
+          done
+
+          if [[ ${#MISSING_TESTS[@]} -gt 0 ]]; then
+            echo "⚠ WARNING: The following new files may be missing tests:"
+            for FILE in "${MISSING_TESTS[@]}"; do
+              echo "  - $FILE"
+            done
+            echo ""
+            echo "Constitution requires:"
+            echo "  - 80%+ statement coverage"
+            echo "  - 75%+ branch coverage"
+            echo "  - Tests for all business logic"
+            echo ""
+            echo "Consider adding tests before merging."
+          else
+            echo "✓ All new implementation files have corresponding tests"
           fi
-
-          echo "✅ Constitution has content"
