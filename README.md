@@ -245,6 +245,8 @@ aequitas/
 │   ├── public/
 │   ├── package.json
 │   └── next.config.js
+├── scripts/
+│   └── check-speckit.sh      # Speckit validation script
 ├── docker-compose.yml
 ├── .gitignore
 └── README.md
@@ -289,15 +291,82 @@ pnpm run test:e2e:ui
 
 ## 🛠️ Development Workflow
 
-### 1. Spec-Driven Development
-This project follows the [Spec-Kit](https://github.com/github/spec-kit) methodology:
+### 1. Spec-Driven Development with Speckit
 
-1. **Analyze:** Use `speckit.analyze` to understand feature requests
-2. **Clarify:** Use `speckit.clarify` to identify ambiguities
-3. **Specify:** Create detailed specs in `specs/[number]-[feature-name]/`
-4. **Plan:** Create implementation plans
-5. **Implement:** Build features based on specs
-6. **Review:** Use checklists to ensure quality
+This project follows the **Speckit methodology** with **automatic enforcement**:
+
+```
+📝 spec.md → 📐 plan.md → ✅ tasks.md → 💻 Code → 🧪 Test → 📚 Docs
+```
+
+#### Required Files for Each Feature
+Every feature in `specs/[number]-[feature-name]/` **must have**:
+- ✅ `spec.md` - Feature specification with requirements and acceptance criteria
+- ✅ `plan.md` - Implementation plan with phases, timeline, and dependencies
+- ✅ `tasks.md` - Detailed task breakdown with time estimates
+
+#### Automatic Enforcement
+
+**🔒 Git Pre-Commit Hook**: Blocks commits if specs are missing required files
+```bash
+# Located at: .git/hooks/pre-commit
+# Validates structure before every commit
+```
+
+**🔍 Validation Script**: Run manually or in CI/CD
+```bash
+bash scripts/check-speckit.sh
+```
+
+**🤖 GitHub Actions**: Validates on every PR and push
+```yaml
+# See: .github/workflows/speckit-validation.yml
+```
+
+#### Claude Code Commands
+
+Use these slash commands when working with Claude Code:
+```bash
+/speckit-new       # Start a new feature with guided spec creation
+/speckit-plan      # Generate implementation plan from spec.md
+/speckit-tasks     # Generate task breakdown from plan.md
+/speckit-validate  # Validate all specs have required files
+```
+
+#### Workflow Example
+
+1. **Create a new feature**:
+   ```bash
+   /speckit-new
+   # Or manually: mkdir specs/048-feature-name
+   ```
+
+2. **Write spec.md** with requirements and acceptance criteria
+
+3. **Generate plan.md**:
+   ```bash
+   /speckit-plan
+   ```
+
+4. **Generate tasks.md**:
+   ```bash
+   /speckit-tasks
+   ```
+
+5. **Implement following tasks** - Check off tasks as you complete them
+
+6. **Test comprehensively**:
+   - Unit tests (>90% coverage)
+   - Integration tests
+   - Regression tests
+   - Build verification (`npm run build`)
+   - Docker verification (`docker-compose up`)
+
+7. **Update documentation** - README, API docs, i18n files
+
+**📖 Full Speckit Guide**: See [.specify/README.md](.specify/README.md)
+
+**📜 Project Constitution**: See [.specify/constitution.md](.specify/constitution.md)
 
 ### 2. Branching Strategy
 - `main` - Production-ready code
