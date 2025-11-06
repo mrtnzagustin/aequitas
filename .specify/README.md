@@ -80,8 +80,10 @@ specs/
 └── ...
 
 .specify/
-├── constitution.md  # ✅ Project principles and rules
-└── README.md        # 📖 This file
+├── memory/
+│   └── constitution.md        # ✅ Project principles and rules
+├── AI_AGENT_INSTRUCTIONS.md   # 🤖 Mandatory AI agent workflow guide
+└── README.md                  # 📖 This file
 ```
 
 ## 🚫 Enforcement Mechanisms
@@ -109,7 +111,7 @@ Can be run manually or by CI/CD.
 
 ## 📖 Constitution
 
-The `constitution.md` file defines:
+The `memory/constitution.md` file defines:
 - **Project principles** (Student-centric design, Privacy first, etc.)
 - **Technical stack** (NestJS, Next.js, PostgreSQL, Redis, etc.)
 - **Code quality standards** (TypeScript strict mode, testing requirements)
@@ -117,7 +119,18 @@ The `constitution.md` file defines:
 - **Documentation synchronization** (README, API docs, specs)
 - **Speckit workflow compliance** (The workflow you must follow)
 
-**Read it**: [constitution.md](./constitution.md)
+**Read it**: [memory/constitution.md](./memory/constitution.md)
+
+## 🤖 AI Agent Instructions
+
+The `AI_AGENT_INSTRUCTIONS.md` file provides mandatory workflow instructions for all AI agents working on this project. It includes:
+- Pre-implementation requirements (read constitution first)
+- Speckit workflow verification steps
+- Testing and code quality standards
+- Pre-commit hook compliance
+- Prohibited actions and best practices
+
+**Read it**: [AI_AGENT_INSTRUCTIONS.md](./AI_AGENT_INSTRUCTIONS.md)
 
 ## 🎯 Success Criteria Checklist
 
@@ -209,7 +222,8 @@ Before marking a feature as complete:
 
 ## 🤝 Getting Help
 
-- **Read the constitution**: [constitution.md](./constitution.md)
+- **Read the constitution**: [memory/constitution.md](./memory/constitution.md)
+- **Read AI agent instructions**: [AI_AGENT_INSTRUCTIONS.md](./AI_AGENT_INSTRUCTIONS.md)
 - **Check existing specs**: See `specs/001-006/` for detailed MVP examples
 - **Run validation**: `bash scripts/check-speckit.sh`
 - **Ask Claude Code**: The AI assistant knows the Speckit workflow

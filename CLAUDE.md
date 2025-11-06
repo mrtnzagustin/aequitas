@@ -13,7 +13,8 @@ This document provides instructions for AI agents (like Claude Code) working on 
 **Before ANY coding, refactoring, or implementation task, you MUST:**
 
 1. **Read the foundational documents:**
-   - `.specify/constitution.md` - Project principles, technical standards, testing requirements
+   - `.specify/memory/constitution.md` - Project principles, technical standards, testing requirements
+   - `.specify/AI_AGENT_INSTRUCTIONS.md` - Mandatory AI agent workflow guide
    - `.specify/README.md` - Speckit workflow guide
    - `README.md` - Project overview and setup instructions
 
@@ -189,7 +190,8 @@ git branch --show-current
 # Output: 007-notification-system
 
 # Step 2: Read foundational docs
-cat .specify/constitution.md
+cat .specify/memory/constitution.md
+cat .specify/AI_AGENT_INSTRUCTIONS.md
 cat .specify/README.md
 cat README.md
 
@@ -313,10 +315,11 @@ git commit -m "feat: add new feature"
 
 ## When in Doubt
 
-1. **Read the constitution:** `.specify/constitution.md` has the answers
-2. **Check existing specs:** Look at `specs/001-006/` for detailed examples
-3. **Run validation:** `bash scripts/check-speckit.sh`
-4. **Ask the user:** If something is unclear, ask before proceeding
+1. **Read the constitution:** `.specify/memory/constitution.md` has the answers
+2. **Read AI agent instructions:** `.specify/AI_AGENT_INSTRUCTIONS.md` has workflow details
+3. **Check existing specs:** Look at `specs/001-006/` for detailed examples
+4. **Run validation:** `bash scripts/check-speckit.sh`
+5. **Ask the user:** If something is unclear, ask before proceeding
 
 ---
 

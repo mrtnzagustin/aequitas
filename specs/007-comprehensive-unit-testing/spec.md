@@ -361,7 +361,7 @@ describe('UsersController', () => {
 - [NestJS Testing Documentation](https://docs.nestjs.com/fundamentals/testing)
 - [Jest Documentation](https://jestjs.io/docs/getting-started)
 - [Supertest Documentation](https://github.com/visionmedia/supertest)
-- Constitution: `.specify/constitution.md` - Testing principles
+- Constitution: `.specify/memory/constitution.md` - Testing principles
 
 ---
 
