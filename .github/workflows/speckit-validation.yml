@@ -92,7 +92,7 @@ jobs:
             echo "  3. Generate tasks.md (detailed tasks)"
             echo "  4. THEN implement the feature"
             echo ""
-            echo "See: .specify/constitution.md for complete guidelines"
+            echo "See: .specify/memory/constitution.md for complete guidelines"
             exit 1
           fi
 
@@ -115,8 +115,8 @@ jobs:
 
       - name: Check constitution.md
         run: |
-          if [ ! -f ".specify/constitution.md" ]; then
-            echo "❌ ERROR: .specify/constitution.md not found"
+          if [ ! -f ".specify/memory/constitution.md" ]; then
+            echo "❌ ERROR: .specify/memory/constitution.md not found"
             echo ""
             echo "The Speckit constitution is required and defines:"
             echo "  - Project principles and guidelines"
@@ -129,7 +129,7 @@ jobs:
           echo "✅ Constitution found and valid"
 
           # Check that constitution is not empty
-          if [ ! -s ".specify/constitution.md" ]; then
+          if [ ! -s ".specify/memory/constitution.md" ]; then
             echo "❌ ERROR: constitution.md is empty"
             exit 1
           fi

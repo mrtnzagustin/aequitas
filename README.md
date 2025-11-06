@@ -289,7 +289,7 @@ pnpm run test:e2e:ui
 
 - **API Documentation:** Available at `/api/docs` when running the backend
 - **Feature Specifications:** See `specs/` directory
-- **Architecture Decisions:** See `.specify/constitution.md`
+- **Architecture Decisions:** See `.specify/memory/constitution.md`
 - **Prompt Engineering:** See `.github/prompts/`
 
 ## 🛠️ Development Workflow
@@ -380,9 +380,9 @@ Use these slash commands when working with Claude Code:
 
 **📖 Full Speckit Guide**: See [.specify/README.md](.specify/README.md)
 
-**📜 Project Constitution**: See [.specify/constitution.md](.specify/constitution.md)
+**📜 Project Constitution**: See [.specify/memory/constitution.md](.specify/memory/constitution.md)
 
-**🤖 AI Agent Instructions**: See [.claude.md](.claude.md) for guidelines on working with Claude Code and other AI agents
+**🤖 AI Agent Instructions**: See [CLAUDE.md](CLAUDE.md) for guidelines on working with Claude Code and other AI agents
 
 ### 2. Branching Strategy
 - `main` - Production-ready code

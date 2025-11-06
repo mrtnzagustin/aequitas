@@ -9,7 +9,7 @@ The constitution is the foundational document that governs all development decis
 - **Living Document:** Evolves as the project matures
 
 ## Your Task
-Create or update the `.specify/constitution.md` file based on project discussions, user requirements, and emerging needs.
+Create or update the `.specify/memory/constitution.md` file based on project discussions, user requirements, and emerging needs.
 
 ## Constitution Structure
 

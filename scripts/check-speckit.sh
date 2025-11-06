@@ -24,9 +24,9 @@ if [ ! -d "$SPECS_DIR" ]; then
 fi
 
 # Check constitution.md exists
-if [ ! -f ".specify/constitution.md" ]; then
-    echo -e "${COLOR_RED}❌ Error: .specify/constitution.md not found${COLOR_NC}"
-    echo "   Run: mkdir -p .specify && touch .specify/constitution.md"
+if [ ! -f ".specify/memory/constitution.md" ]; then
+    echo -e "${COLOR_RED}❌ Error: .specify/memory/constitution.md not found${COLOR_NC}"
+    echo "   Run: mkdir -p .specify && touch .specify/memory/constitution.md"
     ERRORS=$((ERRORS + 1))
 else
     echo -e "${COLOR_GREEN}✓${COLOR_NC} Constitution found"
@@ -88,6 +88,6 @@ else
     echo "  2. Generate plan.md before implementation"
     echo "  3. Generate tasks.md before coding"
     echo ""
-    echo "See .specify/constitution.md for complete guidelines"
+    echo "See .specify/memory/constitution.md for complete guidelines"
     exit 1
 fi

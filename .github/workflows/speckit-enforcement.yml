@@ -101,7 +101,7 @@ jobs:
             echo "  4. Generate tasks.md using /speckit-tasks"
             echo "  5. THEN implement the feature"
             echo ""
-            echo "See: .specify/constitution.md for complete guidelines"
+            echo "See: .specify/memory/constitution.md for complete guidelines"
             exit 1
           fi
 
@@ -138,7 +138,7 @@ jobs:
             echo "  2. Use /speckit-plan to generate plan.md"
             echo "  3. Use /speckit-tasks to generate tasks.md"
             echo ""
-            echo "See: .specify/constitution.md for complete guidelines"
+            echo "See: .specify/memory/constitution.md for complete guidelines"
             exit 1
           fi
 
@@ -285,8 +285,8 @@ jobs:
 
       - name: Check constitution.md
         run: |
-          if [ ! -f ".specify/constitution.md" ]; then
-            echo "❌ ERROR: .specify/constitution.md not found"
+          if [ ! -f ".specify/memory/constitution.md" ]; then
+            echo "❌ ERROR: .specify/memory/constitution.md not found"
             echo ""
             echo "The Speckit constitution is required and defines:"
             echo "  - Project principles and guidelines"
@@ -299,32 +299,32 @@ jobs:
           echo "✅ Constitution found"
 
           # Check that constitution is not empty
-          if [ ! -s ".specify/constitution.md" ]; then
+          if [ ! -s ".specify/memory/constitution.md" ]; then
             echo "❌ ERROR: constitution.md is empty"
             exit 1
           fi
 
           echo "✅ Constitution has content"
 
-      - name: Check .claude.md
+      - name: Check CLAUDE.md
         run: |
-          if [ ! -f ".claude.md" ]; then
-            echo "⚠️  WARNING: .claude.md not found"
+          if [ ! -f "CLAUDE.md" ]; then
+            echo "⚠️  WARNING: CLAUDE.md not found"
             echo ""
-            echo "The .claude.md file provides instructions for AI agents"
+            echo "The CLAUDE.md file provides instructions for AI agents"
             echo "It should contain Speckit-first workflow guidelines"
             exit 1
           fi
 
-          echo "✅ .claude.md found"
+          echo "✅ CLAUDE.md found"
 
-          # Check that .claude.md is not empty
-          if [ ! -s ".claude.md" ]; then
-            echo "❌ ERROR: .claude.md is empty"
+          # Check that CLAUDE.md is not empty
+          if [ ! -s "CLAUDE.md" ]; then
+            echo "❌ ERROR: CLAUDE.md is empty"
             exit 1
           fi
 
-          echo "✅ .claude.md has content"
+          echo "✅ CLAUDE.md has content"
 
   final-report:
     name: Final Report

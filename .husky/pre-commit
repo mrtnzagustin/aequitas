@@ -104,7 +104,7 @@ else
         echo "  4. Generate tasks.md using /speckit-tasks"
         echo "  5. THEN implement the feature"
         echo ""
-        echo -e "📖 See: ${COLOR_BLUE}.specify/constitution.md${COLOR_NC} and ${COLOR_BLUE}.claude.md${COLOR_NC} for details"
+        echo -e "📖 See: ${COLOR_BLUE}.specify/memory/constitution.md${COLOR_NC} and ${COLOR_BLUE}.claude.md${COLOR_NC} for details"
         echo ""
         exit 1
     fi
@@ -166,7 +166,7 @@ else
             echo "     (or manually create task breakdown)"
         fi
         echo ""
-        echo -e "📖 See: ${COLOR_BLUE}.specify/constitution.md${COLOR_NC} for complete guidelines"
+        echo -e "📖 See: ${COLOR_BLUE}.specify/memory/constitution.md${COLOR_NC} for complete guidelines"
         echo ""
         exit 1
     fi
