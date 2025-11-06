@@ -1,0 +1,26 @@
+{
+  "name": "aequitas-monorepo",
+  "version": "1.0.0",
+  "description": "Aequitas AI-Powered Therapeutic & Academic Support Platform - Monorepo",
+  "private": true,
+  "scripts": {
+    "prepare": "husky || true",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "test:all": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "build:all": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "speckit:validate": "bash scripts/check-speckit.sh"
+  },
+  "devDependencies": {
+    "husky": "^9.0.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrtnzagustin/aequitas.git"
+  },
+  "author": "Aequitas Team",
+  "license": "MIT"
+}
