@@ -94,6 +94,9 @@ cd aequitas
 
 ### 2. Install Dependencies
 ```bash
+# Install root dependencies (includes Husky for git hooks)
+npm install
+
 # Install backend dependencies
 cd backend
 pnpm install
@@ -307,20 +310,31 @@ Every feature in `specs/[number]-[feature-name]/` **must have**:
 
 #### Automatic Enforcement
 
-**🔒 Git Pre-Commit Hook**: Blocks commits if specs are missing required files
+**🔒 Husky Pre-Commit Hook**: Blocks commits if specs are missing required files or tests fail
 ```bash
-# Located at: .git/hooks/pre-commit
-# Validates structure before every commit
+# Located at: .husky/pre-commit
+# Automatically runs before every commit:
+#   ✓ Validates Speckit structure (for feature branches)
+#   ✓ Runs backend tests (if backend/src changes)
+#   ✓ Runs frontend tests (if frontend/src changes)
+#   ✓ Blocks commit if any check fails
 ```
+
+**⚠️ Important**: Never use `git commit --no-verify` to bypass the hooks. If the pre-commit check fails, fix the underlying issue instead.
 
 **🔍 Validation Script**: Run manually or in CI/CD
 ```bash
 bash scripts/check-speckit.sh
 ```
 
-**🤖 GitHub Actions**: Validates on every PR and push
+**🤖 GitHub Actions**: Validates and tests on every PR and push
 ```yaml
-# See: .github/workflows/speckit-validation.yml
+# See: .github/workflows/speckit-enforcement.yml
+# Runs:
+#   - Speckit structure validation
+#   - Backend tests and build
+#   - Frontend tests and build
+#   - Constitution validation
 ```
 
 #### Claude Code Commands
@@ -367,6 +381,8 @@ Use these slash commands when working with Claude Code:
 **📖 Full Speckit Guide**: See [.specify/README.md](.specify/README.md)
 
 **📜 Project Constitution**: See [.specify/constitution.md](.specify/constitution.md)
+
+**🤖 AI Agent Instructions**: See [.claude.md](.claude.md) for guidelines on working with Claude Code and other AI agents
 
 ### 2. Branching Strategy
 - `main` - Production-ready code

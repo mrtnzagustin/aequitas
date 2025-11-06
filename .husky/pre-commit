@@ -1,0 +1,276 @@
+#!/usr/bin/env bash
+
+# Aequitas Speckit Pre-Commit Hook
+# Enforces Speckit-first workflow and runs tests before allowing commits
+# This script runs automatically before every git commit
+
+set -e
+set -u
+
+# Color codes for output
+COLOR_RED='\033[0;31m'
+COLOR_GREEN='\033[0;32m'
+COLOR_YELLOW='\033[1;33m'
+COLOR_BLUE='\033[0;34m'
+COLOR_NC='\033[0m' # No Color
+
+# Print header
+echo ""
+echo -e "${COLOR_BLUE}╔════════════════════════════════════════════════════════╗${COLOR_NC}"
+echo -e "${COLOR_BLUE}║  Aequitas Pre-Commit Validation                       ║${COLOR_NC}"
+echo -e "${COLOR_BLUE}╚════════════════════════════════════════════════════════╝${COLOR_NC}"
+echo ""
+
+# ============================================================================
+# STEP 1: Check if there are any staged changes
+# ============================================================================
+
+STAGED_FILES=$(git diff --cached --name-only)
+
+if [ -z "$STAGED_FILES" ]; then
+    echo -e "${COLOR_YELLOW}⚠️  No staged changes found. Nothing to commit.${COLOR_NC}"
+    echo ""
+    exit 1
+fi
+
+# ============================================================================
+# STEP 2: Check if there are changes in backend/src or frontend/src
+# ============================================================================
+
+BACKEND_CHANGES=$(echo "$STAGED_FILES" | grep -E "^backend/src/" || true)
+FRONTEND_CHANGES=$(echo "$STAGED_FILES" | grep -E "^frontend/src/" || true)
+
+if [ -z "$BACKEND_CHANGES" ] && [ -z "$FRONTEND_CHANGES" ]; then
+    echo -e "${COLOR_GREEN}✓${COLOR_NC} No changes in backend/src or frontend/src"
+    echo -e "${COLOR_BLUE}ℹ${COLOR_NC}  Skipping Speckit validation and tests"
+    echo ""
+    echo -e "${COLOR_GREEN}✅ Pre-commit checks passed! Proceeding with commit.${COLOR_NC}"
+    echo ""
+    exit 0
+fi
+
+echo -e "${COLOR_BLUE}ℹ${COLOR_NC}  Detected changes in source code:"
+if [ -n "$BACKEND_CHANGES" ]; then
+    echo -e "   - backend/src/"
+fi
+if [ -n "$FRONTEND_CHANGES" ]; then
+    echo -e "   - frontend/src/"
+fi
+echo ""
+
+# ============================================================================
+# STEP 3: Get current branch name and validate against Speckit structure
+# ============================================================================
+
+CURRENT_BRANCH=$(git branch --show-current)
+echo -e "${COLOR_BLUE}ℹ${COLOR_NC}  Current branch: ${CURRENT_BRANCH}"
+echo ""
+
+# Extract feature number from branch name (e.g., "001-feature-name" -> "001")
+FEATURE_NUM=""
+if [[ $CURRENT_BRANCH =~ ^([0-9]+)- ]]; then
+    FEATURE_NUM="${BASH_REMATCH[1]}"
+fi
+
+if [ -z "$FEATURE_NUM" ]; then
+    echo -e "${COLOR_YELLOW}⚠️  Branch does not follow NNN-feature-name convention${COLOR_NC}"
+    echo -e "${COLOR_BLUE}ℹ${COLOR_NC}  Skipping Speckit validation (allowed for hotfix/chore branches)"
+    echo ""
+else
+    # ============================================================================
+    # STEP 4: Validate Speckit structure for feature branches
+    # ============================================================================
+
+    echo -e "${COLOR_BLUE}ℹ${COLOR_NC}  Feature branch detected (Feature #${FEATURE_NUM})"
+    echo -e "${COLOR_BLUE}ℹ${COLOR_NC}  Validating Speckit structure..."
+    echo ""
+
+    # Find matching spec directory
+    SPEC_DIR=$(find specs -maxdepth 1 -type d -name "${FEATURE_NUM}-*" | head -n 1)
+
+    if [ -z "$SPEC_DIR" ]; then
+        echo -e "${COLOR_RED}╔════════════════════════════════════════════════════════╗${COLOR_NC}"
+        echo -e "${COLOR_RED}║  ❌ COMMIT BLOCKED: Missing Spec Directory            ║${COLOR_NC}"
+        echo -e "${COLOR_RED}╚════════════════════════════════════════════════════════╝${COLOR_NC}"
+        echo ""
+        echo -e "${COLOR_RED}No matching spec directory found for feature ${FEATURE_NUM}${COLOR_NC}"
+        echo ""
+        echo -e "Expected directory: ${COLOR_YELLOW}specs/${FEATURE_NUM}-feature-name/${COLOR_NC}"
+        echo ""
+        echo -e "📋 Required Speckit workflow:"
+        echo "  1. Create spec directory: mkdir -p specs/${FEATURE_NUM}-feature-name"
+        echo "  2. Create spec.md (problem, solution, requirements)"
+        echo "  3. Generate plan.md using /speckit-plan"
+        echo "  4. Generate tasks.md using /speckit-tasks"
+        echo "  5. THEN implement the feature"
+        echo ""
+        echo -e "📖 See: ${COLOR_BLUE}.specify/constitution.md${COLOR_NC} and ${COLOR_BLUE}.claude.md${COLOR_NC} for details"
+        echo ""
+        exit 1
+    fi
+
+    echo -e "${COLOR_GREEN}✓${COLOR_NC} Found spec directory: ${SPEC_DIR}"
+
+    # Check for required files
+    MISSING_FILES=()
+
+    if [ ! -f "${SPEC_DIR}/spec.md" ]; then
+        MISSING_FILES+=("spec.md")
+    else
+        # Check if spec.md is not empty
+        if [ ! -s "${SPEC_DIR}/spec.md" ]; then
+            MISSING_FILES+=("spec.md (empty)")
+        fi
+    fi
+
+    if [ ! -f "${SPEC_DIR}/plan.md" ]; then
+        MISSING_FILES+=("plan.md")
+    else
+        # Check if plan.md is not empty
+        if [ ! -s "${SPEC_DIR}/plan.md" ]; then
+            MISSING_FILES+=("plan.md (empty)")
+        fi
+    fi
+
+    if [ ! -f "${SPEC_DIR}/tasks.md" ]; then
+        MISSING_FILES+=("tasks.md")
+    else
+        # Check if tasks.md is not empty
+        if [ ! -s "${SPEC_DIR}/tasks.md" ]; then
+            MISSING_FILES+=("tasks.md (empty)")
+        fi
+    fi
+
+    if [ ${#MISSING_FILES[@]} -gt 0 ]; then
+        echo ""
+        echo -e "${COLOR_RED}╔════════════════════════════════════════════════════════╗${COLOR_NC}"
+        echo -e "${COLOR_RED}║  ❌ COMMIT BLOCKED: Missing/Empty Speckit Files       ║${COLOR_NC}"
+        echo -e "${COLOR_RED}╚════════════════════════════════════════════════════════╝${COLOR_NC}"
+        echo ""
+        echo -e "${COLOR_RED}The following required files are missing or empty:${COLOR_NC}"
+        for file in "${MISSING_FILES[@]}"; do
+            echo -e "  - ${COLOR_YELLOW}${SPEC_DIR}/${file}${COLOR_NC}"
+        done
+        echo ""
+        echo -e "📋 How to fix:"
+        if [[ " ${MISSING_FILES[@]} " =~ "spec.md" ]]; then
+            echo "  1. Create spec.md with feature requirements"
+            echo "     (problem, solution, acceptance criteria)"
+        fi
+        if [[ " ${MISSING_FILES[@]} " =~ "plan.md" ]]; then
+            echo "  2. Generate plan.md: Run /speckit-plan in Claude Code"
+            echo "     (or manually create implementation strategy)"
+        fi
+        if [[ " ${MISSING_FILES[@]} " =~ "tasks.md" ]]; then
+            echo "  3. Generate tasks.md: Run /speckit-tasks in Claude Code"
+            echo "     (or manually create task breakdown)"
+        fi
+        echo ""
+        echo -e "📖 See: ${COLOR_BLUE}.specify/constitution.md${COLOR_NC} for complete guidelines"
+        echo ""
+        exit 1
+    fi
+
+    echo -e "${COLOR_GREEN}✓${COLOR_NC} spec.md exists and is not empty"
+    echo -e "${COLOR_GREEN}✓${COLOR_NC} plan.md exists and is not empty"
+    echo -e "${COLOR_GREEN}✓${COLOR_NC} tasks.md exists and is not empty"
+    echo ""
+fi
+
+# ============================================================================
+# STEP 5: Run Backend Tests (if backend changes detected)
+# ============================================================================
+
+if [ -n "$BACKEND_CHANGES" ] && [ -f "backend/package.json" ]; then
+    echo -e "${COLOR_BLUE}ℹ${COLOR_NC}  Running backend tests..."
+    echo ""
+
+    cd backend
+
+    if npm test -- --passWithNoTests --silent 2>&1 | grep -E "(PASS|FAIL|Tests:|Test Suites:)" ; then
+        echo ""
+        echo -e "${COLOR_GREEN}✓${COLOR_NC} Backend tests passed"
+        echo ""
+    else
+        echo ""
+        echo -e "${COLOR_RED}╔════════════════════════════════════════════════════════╗${COLOR_NC}"
+        echo -e "${COLOR_RED}║  ❌ COMMIT BLOCKED: Backend Tests Failed              ║${COLOR_NC}"
+        echo -e "${COLOR_RED}╚════════════════════════════════════════════════════════╝${COLOR_NC}"
+        echo ""
+        echo -e "${COLOR_RED}Backend tests failed. Fix the failing tests before committing.${COLOR_NC}"
+        echo ""
+        echo -e "💡 How to fix:"
+        echo "  1. Run: cd backend && npm test"
+        echo "  2. Fix the failing tests"
+        echo "  3. Verify: npm test passes locally"
+        echo "  4. Stage your fixes: git add ."
+        echo "  5. Try committing again"
+        echo ""
+        cd ..
+        exit 1
+    fi
+
+    cd ..
+fi
+
+# ============================================================================
+# STEP 6: Run Frontend Tests (if frontend changes detected)
+# ============================================================================
+
+if [ -n "$FRONTEND_CHANGES" ] && [ -f "frontend/package.json" ]; then
+    echo -e "${COLOR_BLUE}ℹ${COLOR_NC}  Running frontend tests..."
+    echo ""
+
+    cd frontend
+
+    # Check if test:run script exists (for Vitest), otherwise use test
+    if grep -q '"test:run"' package.json; then
+        TEST_COMMAND="npm run test:run -- --passWithNoTests --silent"
+    else
+        TEST_COMMAND="npm test -- --passWithNoTests --silent"
+    fi
+
+    if eval "$TEST_COMMAND" 2>&1 | grep -E "(PASS|FAIL|Tests:|Test Suites:)" ; then
+        echo ""
+        echo -e "${COLOR_GREEN}✓${COLOR_NC} Frontend tests passed"
+        echo ""
+    else
+        echo ""
+        echo -e "${COLOR_RED}╔════════════════════════════════════════════════════════╗${COLOR_NC}"
+        echo -e "${COLOR_RED}║  ❌ COMMIT BLOCKED: Frontend Tests Failed             ║${COLOR_NC}"
+        echo -e "${COLOR_RED}╚════════════════════════════════════════════════════════╝${COLOR_NC}"
+        echo ""
+        echo -e "${COLOR_RED}Frontend tests failed. Fix the failing tests before committing.${COLOR_NC}"
+        echo ""
+        echo -e "💡 How to fix:"
+        echo "  1. Run: cd frontend && npm test"
+        echo "  2. Fix the failing tests"
+        echo "  3. Verify: npm test passes locally"
+        echo "  4. Stage your fixes: git add ."
+        echo "  5. Try committing again"
+        echo ""
+        cd ..
+        exit 1
+    fi
+
+    cd ..
+fi
+
+# ============================================================================
+# SUCCESS - All checks passed
+# ============================================================================
+
+echo -e "${COLOR_GREEN}╔════════════════════════════════════════════════════════╗${COLOR_NC}"
+echo -e "${COLOR_GREEN}║  ✅ All Checks Passed - Proceeding with Commit        ║${COLOR_NC}"
+echo -e "${COLOR_GREEN}╚════════════════════════════════════════════════════════╝${COLOR_NC}"
+echo ""
+echo -e "${COLOR_GREEN}✓${COLOR_NC} Speckit validation: PASSED"
+if [ -n "$BACKEND_CHANGES" ]; then
+    echo -e "${COLOR_GREEN}✓${COLOR_NC} Backend tests: PASSED"
+fi
+if [ -n "$FRONTEND_CHANGES" ]; then
+    echo -e "${COLOR_GREEN}✓${COLOR_NC} Frontend tests: PASSED"
+fi
+echo ""
+
+exit 0
