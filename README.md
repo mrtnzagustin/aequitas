@@ -184,51 +184,81 @@ NEXT_PUBLIC_DEFAULT_LOCALE=es-AR
 
 ### 4. Start Development Environment
 
-**Option A: Using Docker Compose (Recommended)**
+**Option A: Automated Setup (Recommended) 🚀**
 ```bash
-# Start all services (PostgreSQL, Backend, Frontend)
+# Run the automated setup script (creates everything in one command)
+./scripts/setup-dev.sh
+```
+
+This script will:
+- ✅ Create `.env` files from examples
+- ✅ Start PostgreSQL and Redis containers
+- ✅ Install all dependencies
+- ✅ Wait for services to be ready
+- ✅ Populate database with realistic test data
+- ✅ Start all services (backend + frontend)
+
+**Option B: Using Docker Compose (Manual)**
+```bash
+# Create .env files
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env.local
+
+# Start all services (PostgreSQL, Redis, Backend, Frontend)
 docker-compose up -d
 
 # View logs
 docker-compose logs -f
 
-# Access:
-# - Frontend: http://localhost:3000
-# - Backend API: http://localhost:3001
-# - API Docs: http://localhost:3001/api/docs
+# Populate database with test data
+cd backend
+npm install  # If not done yet
+npm run db:setup
 ```
 
-**Option B: Manual Setup**
+**Option C: Local Development (No Docker for Backend/Frontend)**
 ```bash
-# Terminal 1: Start PostgreSQL
-docker-compose up postgres
+# Terminal 1: Start PostgreSQL and Redis only
+docker-compose up postgres redis
 
 # Terminal 2: Start Backend
 cd backend
-pnpm run start:dev
+npm install
+npm run start:dev
 
 # Terminal 3: Start Frontend
 cd frontend
-pnpm run dev
-```
+npm install
+npm run dev
 
-### 5. Run Database Migrations
-
-```bash
+# Terminal 4: Seed database (run once)
 cd backend
-pnpm run migration:run
-pnpm run seed  # Optional: Load sample data
+npm run db:setup
 ```
 
-### 6. Access the Application
+### 5. Access the Application
 
 - **Frontend:** http://localhost:3000
 - **Backend API:** http://localhost:3001
 - **API Documentation:** http://localhost:3001/api/docs
 
-**Default Admin Credentials** (after seeding):
-- Email: `admin@aequitas.local`
-- Password: `Admin123!`
+### 6. Test Credentials
+
+After seeding, you can login with these test accounts:
+
+**Admin Account:**
+- Email: `admin@aequitas.test`
+- Password: `Test1234!`
+
+**Note:** All test users (therapists, teachers, parents) use the same password: `Test1234!`
+
+The seeder creates:
+- 1 admin user
+- 3 therapists
+- 5 teachers
+- 8 parents
+- 15 students with complete profiles
+- Realistic notes, task adaptations, mood check-ins, and learning style profiles
 
 ---
 
@@ -398,6 +428,49 @@ fix(auth): resolve JWT token refresh issue
 docs(readme): update installation instructions
 test(students): add unit tests for StudentService
 chore(deps): update dependencies
+```
+
+### Database Management
+
+#### Quick Database Commands
+
+```bash
+# Reset database with fresh test data
+cd backend
+npm run db:reset
+
+# Populate empty database with test data
+npm run db:setup
+
+# View database in PostgreSQL shell
+docker-compose exec postgres psql -U aequitas -d aequitas_dev
+```
+
+#### Test Data
+
+The seeder (`backend/src/database/seeds/seed.ts`) creates realistic test data including:
+- **Users:** Admin, therapists, teachers, and parents
+- **Students:** 15 students with complete profiles
+- **Notes:** 3-8 notes per student from assigned professionals
+- **Task Adaptations:** 2-5 adaptations per student
+- **Learning Style Profiles:** One per student
+- **Mood Check-ins:** 5-15 check-ins per student over 30 days
+
+All test users share the password: `Test1234!`
+
+#### Database Schema
+
+Tables are automatically created by TypeORM's `synchronize` mode in development. For production, use migrations:
+
+```bash
+# Generate migration from entity changes
+npm run migration:generate -- src/database/migrations/MigrationName
+
+# Run pending migrations
+npm run migration:run
+
+# Revert last migration
+npm run migration:revert
 ```
 
 ---

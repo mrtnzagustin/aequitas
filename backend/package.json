@@ -22,7 +22,9 @@
     "migration:create": "npm run typeorm -- migration:create",
     "migration:run": "npm run typeorm -- migration:run -d src/database/data-source.ts",
     "migration:revert": "npm run typeorm -- migration:revert -d src/database/data-source.ts",
-    "seed": "ts-node src/database/seeds/seed.ts"
+    "seed": "ts-node src/database/seeds/seed.ts",
+    "db:setup": "npm run seed",
+    "db:reset": "npm run seed"
   },
   "dependencies": {
     "@langchain/community": "^0.0.38",
