@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { StudentSchedule, ScheduledTask, TimeEstimationPattern } from './entities/schedule.entity';
+import { StudentSchedule, ScheduledTask, TimeEstimationPattern, ScheduleCreatedBy } from './entities/schedule.entity';
 
 @Injectable()
 export class TimeCoachService {
@@ -26,7 +26,7 @@ export class TimeCoachService {
     const schedule = this.scheduleRepository.create({
       studentId,
       date,
-      createdBy: 'AI',
+      createdBy: ScheduleCreatedBy.AI,
     });
 
     const savedSchedule = await this.scheduleRepository.save(schedule);
@@ -60,10 +60,16 @@ export class TimeCoachService {
   }
 
   async getScheduleWithTasks(scheduleId: string): Promise<StudentSchedule> {
-    return this.scheduleRepository.findOne({
+    const schedule = await this.scheduleRepository.findOne({
       where: { id: scheduleId },
       relations: ['plannedTasks'],
     });
+
+    if (!schedule) {
+      throw new Error(`Schedule with id ${scheduleId} not found`);
+    }
+
+    return schedule;
   }
 
   async recordTaskCompletion(

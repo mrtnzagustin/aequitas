@@ -59,6 +59,10 @@ export class ProgressService {
       where: { id: studentId },
     });
 
+    if (!student) {
+      throw new Error(`Student with id ${studentId} not found`);
+    }
+
     const points = await this.pointsRepository.findOne({
       where: { studentId },
     });

@@ -45,10 +45,16 @@ export class QuizService {
   }
 
   async getQuizWithQuestions(quizId: string): Promise<Quiz> {
-    return this.quizRepository.findOne({
+    const quiz = await this.quizRepository.findOne({
       where: { id: quizId },
       relations: ['questions'],
     });
+
+    if (!quiz) {
+      throw new Error(`Quiz with id ${quizId} not found`);
+    }
+
+    return quiz;
   }
 
   async submitQuizAttempt(

@@ -2,7 +2,7 @@ import { Controller, Post, Get, Body, Param, Query, UseGuards } from '@nestjs/co
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { Role } from '../users/entities/user.entity';
+import { UserRole } from '../users/entities/user.entity';
 import { CognitiveLoadService } from './cognitive-load.service';
 import { RecordMeasurementDto } from './dto/record-measurement.dto';
 
@@ -12,19 +12,19 @@ export class CognitiveLoadController {
   constructor(private readonly cognitiveLoadService: CognitiveLoadService) {}
 
   @Post('measurement')
-  @Roles(Role.STUDENT, Role.TEACHER, Role.THERAPIST, Role.PARENT)
+  @Roles(UserRole.STUDENT, UserRole.TEACHER, UserRole.THERAPIST, UserRole.PARENT)
   async recordMeasurement(@Body() dto: RecordMeasurementDto) {
     return this.cognitiveLoadService.recordMeasurement(dto);
   }
 
   @Get('current/:studentId')
-  @Roles(Role.STUDENT, Role.TEACHER, Role.THERAPIST, Role.PARENT)
+  @Roles(UserRole.STUDENT, UserRole.TEACHER, UserRole.THERAPIST, UserRole.PARENT)
   async getCurrentLoad(@Param('studentId') studentId: string) {
     return this.cognitiveLoadService.getCurrentLoad(studentId);
   }
 
   @Get('patterns/:studentId')
-  @Roles(Role.TEACHER, Role.THERAPIST, Role.PARENT)
+  @Roles(UserRole.TEACHER, UserRole.THERAPIST, UserRole.PARENT)
   async getPatterns(
     @Param('studentId') studentId: string,
     @Query('subject') subject?: string,
@@ -33,7 +33,7 @@ export class CognitiveLoadController {
   }
 
   @Get('recommendations/:studentId')
-  @Roles(Role.TEACHER, Role.THERAPIST, Role.PARENT)
+  @Roles(UserRole.TEACHER, UserRole.THERAPIST, UserRole.PARENT)
   async getRecommendations(@Param('studentId') studentId: string) {
     return this.cognitiveLoadService.getRecommendations(studentId);
   }

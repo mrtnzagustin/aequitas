@@ -11,7 +11,7 @@ import {
 } from './entities/style-evidence.entity';
 import { RecordEvidenceDto } from './dto/record-evidence.dto';
 
-interface StyleRecommendation {
+export interface StyleRecommendation {
   studyMethods: string[];
   contentFormats: string[];
   tipOfTheDay: string;
